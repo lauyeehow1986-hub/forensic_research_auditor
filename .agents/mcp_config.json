@@ -1,15 +1,30 @@
 {
   "mcpServers": {
+    "forensic-audit-mcp": {
+      "command": "C:/Python314/python.exe",
+      "args": [
+        "c:/Users/lauye/Downloads/forensic_research/mcp_server/forensic_mcp_server.py"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    },
     "papers-openalex": {
       "command": "papers",
-      "args": ["mcp", "start", "--stdio"],
+      "args": [
+        "mcp",
+        "start",
+        "--stdio"
+      ],
       "env": {
         "OPENALEX_MAILTO": "your-email@institution.edu"
       }
     },
     "pubmed": {
       "command": "uvx",
-      "args": ["pubmed-search-mcp"],
+      "args": [
+        "pubmed-search-mcp"
+      ],
       "env": {
         "NCBI_API_KEY": "YOUR_OPTIONAL_NCBI_API_KEY",
         "NCBI_EMAIL": "your-email@institution.edu"
@@ -32,10 +47,56 @@
     },
     "rstudio": {
       "command": "rstudio-mcp",
-      "args": ["--config", "~/.rstudio-mcp/config.yaml"],
+      "args": [
+        "--config",
+        "~/.rstudio-mcp/config.yaml"
+      ],
       "env": {
-        "RSTUDIO_MCP_DEBUG": "false",
-        "R_HOME": "/Library/Frameworks/R.framework/Resources"
+        "RSTUDIO_MCP_DEBUG": "false"
+      }
+    },
+    "datacommons-mcp": {
+      "command": "uvx",
+      "args": [
+        "datacommons-mcp"
+      ],
+      "env": {
+        "DC_API_KEY": "YOUR_DATACOMMONS_API_KEY"
+      }
+    },
+    "quantitativeresearch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-quantitativeresearch"
+      ],
+      "env": {
+        "MEMORY_FILE_PATH": "./quantitativeresearch/memory.json",
+        "SESSIONS_FILE_PATH": "./quantitativeresearch/sessions.json"
+      }
+    },
+    "mcp-analytics": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-analytics"
+      ],
+      "env": {}
+    },
+    "open-targets-mcp": {
+      "command": "uvx",
+      "args": [
+        "iflow-mcp_opentargets-open-targets-platform-mcp"
+      ],
+      "env": {}
+    },
+    "biomcp": {
+      "command": "uvx",
+      "args": [
+        "biomcp"
+      ],
+      "env": {
+        "BIOMCP_NCBI_API_KEY": "YOUR_OPTIONAL_NCBI_API_KEY"
       }
     }
   }
