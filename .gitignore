@@ -20,3 +20,6 @@ execute_*.R
 # Python cache
 __pycache__/
 *.pyc
+
+# Archives
+*.zip
