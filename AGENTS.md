@@ -43,5 +43,9 @@ Never rely on LLM mental math. Route each verification step to its dedicated MCP
 - Undeclared primary outcome switching: `LR = 0.05`
 
 ## 4. Mandatory Deliverable Protocol
-Every forensic audit—whether passing or rejected—must generate a persistent Markdown audit report file in `./audit_reports/audit_[STUDY_KEY].md` containing the structured 5-section consensus findings, alongside the direct response in chat with a clickable file link to the report.
+Every forensic audit—whether passing or rejected—must automatically generate and write three persistent Markdown files to `./audit_reports/`:
+1. `audit_[STUDY_KEY].md`: Structured 5-section consensus audit report.
+2. `tweet_[STUDY_KEY].md`: Ready-to-copy Twitter/X disclosure thread with sleuth routing tags (`@PubPeer`, `@MicrobiomDigest`, `@gcabanac`, `@NickWise82`, `@SholtoDavid`).
+3. `pubpeer_[STUDY_KEY].md`: Neutral, objective PubPeer-compliant comment for community peer review.
+Direct responses in chat must provide clickable file links to all three generated deliverables.
 

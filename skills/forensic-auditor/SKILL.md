@@ -95,9 +95,13 @@ Inspect **every figure, clinical scatterplot, dose-response curve, forest plot, 
    - Calculate `Posterior_Odds = Prior_Odds * Product(LR_i)` and `Posterior_Probability = Posterior_Odds / (1 + Posterior_Odds)`.
 4. **NotebookLM Grounded Sync:** When the user's **Forensic Research Auditor** Gemini Notebook (`notebooks/6b8609aa-fa3d-4a82-a123-5ffe7b4518e1`) is available, cross-check against its sources or export the verified audit packet (`<ID>_gate1to3_verified.md`) into the notebook.
 
-## Required Output Structure & Mandatory Output File (.md)
+## Required Output Structure & Mandatory Deliverables (.md)
 
-Every forensic audit must automatically generate and write the complete findings to a persistent output Markdown file at `./audit_reports/audit_[STUDY_KEY].md` (creating `./audit_reports/` if not present), alongside delivering the final 5-section consensus directly in chat with a clickable file link to the report.
+Every forensic audit must automatically generate and write three persistent output files to `./audit_reports/` (creating `./audit_reports/` if not present), alongside delivering the final 5-section consensus directly in chat with clickable file links:
+
+1. **`./audit_reports/audit_[STUDY_KEY].md`**: The complete 5-section consensus audit report.
+2. **`./audit_reports/tweet_[STUDY_KEY].md`**: A ready-to-publish 4-tweet Twitter/X disclosure thread containing the hook, deterministic mathematical receipts, sleuth community routing (`@PubPeer`, `@MicrobiomDigest`, `@gcabanac`, `@NickWise82`, `@SholtoDavid`), hashtags (`#AcademicTwitter`, `#PaperMill`, `#ProblematicPaperScreener`, `#ScientificIntegrity`), and GitHub reproduction links.
+3. **`./audit_reports/pubpeer_[STUDY_KEY].md`**: A strictly objective, neutral comment formatted for 1-click submission to PubPeer, adhering to PubPeer's moderation policy (zero accusatory language, focusing purely on numerical discrepancies and reproducible verification snippets).
 
 Always format the deliverable using these 5 sections:
 

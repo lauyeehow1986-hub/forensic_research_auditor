@@ -455,6 +455,98 @@ def tool_gate4_registry_and_bayesian_score(
     }
 
 
+def tool_generate_social_and_pubpeer_brief(
+    study_title: str,
+    verdict: str,
+    doi: Optional[str] = None,
+    pmid: Optional[str] = None,
+    journal: Optional[str] = None,
+    flagged_issues: Optional[List[str]] = None,
+    mathematical_proof: Optional[str] = None,
+    reproducible_code: Optional[str] = None,
+    posterior_credibility_pct: Optional[float] = None,
+) -> Dict[str, Any]:
+    """
+    Generates ready-to-publish Twitter/X threads and PubPeer-compliant comment briefs
+    for scientific integrity sleuths and paper-mill exposure.
+    """
+    flags = flagged_issues or []
+    issues_bullet = "\n".join(f"• {issue}" for issue in flags) if flags else "• Methodological scrutiny and statistical evaluation."
+    
+    is_hard_reject = "HARD REJECT" in verdict.upper() or "KILL-SWITCH" in verdict.upper()
+    verdict_emoji = "🚨 HARD REJECT (0% Credibility)" if is_hard_reject else f"⚠️ {verdict}"
+    
+    # 1. Tweet 1: Hook & Verdict
+    t1_lines = [
+        f"🚨 Forensic Research Audit Alert:",
+        f"Manuscript: \"{study_title[:85]}...\" ({journal or 'Scientific Publication'})",
+        f"Verdict: {verdict_emoji}",
+    ]
+    if posterior_credibility_pct is not None:
+        t1_lines.append(f"Posterior Credibility: {posterior_credibility_pct}%")
+    if doi:
+        t1_lines.append(f"DOI: https://doi.org/{doi}")
+    elif pmid:
+        t1_lines.append(f"PMID: {pmid}")
+    t1_lines.append("\nKey forensic findings below 🧵👇")
+    t1 = "\n".join(t1_lines)
+
+    # 2. Tweet 2: Deterministic Evidence & Math
+    evidence_text = mathematical_proof if mathematical_proof else f"Key Evidence:\n{issues_bullet}"
+    t2 = (
+        f"🔍 The Forensic Receipts (Deterministic Math & Text):\n\n"
+        f"{evidence_text[:240]}\n\n"
+        f"Verified via autonomous forensic peer-review swarm."
+    )
+
+    # 3. Tweet 3: Sleuth & Metascience Community Routing
+    t3 = (
+        f"Calling scientific integrity sleuths, paper-mill investigators & journal editors:\n"
+        f"@PubPeer @MicrobiomDigest @gcabanac @NickWise82 @SholtoDavid\n\n"
+        f"#AcademicTwitter #PaperMill #ProblematicPaperScreener #ScientificIntegrity #OpenScience"
+    )
+
+    # 4. Tweet 4: Code & Links
+    code_text = reproducible_code if reproducible_code else "library(statcheck); scrutiny::grim_map();"
+    t4 = (
+        f"💻 Reproduce in your own terminal:\n"
+        f"```{code_text[:110]}```\n\n"
+        f"Full open audit report & reproducible MCP pipeline:\n"
+        f"https://github.com/lauyeehow1986-hub/forensic_audit"
+    )
+
+    tweet_thread = [t1.strip(), t2.strip(), t3.strip(), t4.strip()]
+    tweet_markdown = "\n\n---\n\n".join(
+        f"### Tweet {idx+1} ({len(t)} chars)\n{t}" for idx, t in enumerate(tweet_thread)
+    )
+
+    # PubPeer Comment (Strictly neutral & compliant with PubPeer guidelines)
+    pubpeer_comment = (
+        f"### Methodological and Statistical Clarification: *{study_title}*\n\n"
+        f"We conducted an automated mathematical consistency audit on this publication "
+        f"({f'DOI: {doi}' if doi else ''}{f', PMID: {pmid}' if pmid else ''}). "
+        f"We would appreciate clarification from the authors regarding the following statistical observations:\n\n"
+        f"{issues_bullet}\n\n"
+    )
+    if mathematical_proof:
+        pubpeer_comment += f"**Mathematical Evidence:**\n```\n{mathematical_proof}\n```\n\n"
+    if reproducible_code:
+        pubpeer_comment += f"**R / Python Verification Snippet:**\n```r\n{reproducible_code}\n```\n\n"
+    pubpeer_comment += (
+        f"*Note: This comment is submitted to encourage scientific transparency and reproducible peer review, "
+        f"using the open-source Antigravity Forensic Research Auditing Suite "
+        f"(https://github.com/lauyeehow1986-hub/forensic_audit).*"
+    )
+
+    return {
+        "study_title": study_title,
+        "verdict": verdict,
+        "tweet_thread": tweet_thread,
+        "tweet_markdown": tweet_markdown,
+        "pubpeer_comment_markdown": pubpeer_comment,
+    }
+
+
 # Tool Definitions for MCP Tools List
 MCP_TOOLS_MANIFEST = [
     {
@@ -553,6 +645,25 @@ MCP_TOOLS_MANIFEST = [
             "required": ["study_type", "applied_lr_keys"],
         },
     },
+    {
+        "name": "tool_generate_social_and_pubpeer_brief",
+        "description": "Generates a 4-tweet thread with sleuth handles (@PubPeer, @MicrobiomDigest, etc.) and a neutral PubPeer-compliant comment markdown brief.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "study_title": {"type": "string", "description": "Full title of audited study"},
+                "verdict": {"type": "string", "description": "Integrity verdict (e.g. HARD REJECT, SKEPTICAL CAUTION, PASS)"},
+                "doi": {"type": "string", "description": "Digital Object Identifier"},
+                "pmid": {"type": "string", "description": "PubMed ID"},
+                "journal": {"type": "string", "description": "Journal name"},
+                "flagged_issues": {"type": "array", "items": {"type": "string"}, "description": "List of specific statistical/textual flaws"},
+                "mathematical_proof": {"type": "string", "description": "Exact numerical/formulaic discrepancy"},
+                "reproducible_code": {"type": "string", "description": "Minimal R/Python snippet to verify"},
+                "posterior_credibility_pct": {"type": "number", "description": "Posterior credibility percentage"},
+            },
+            "required": ["study_title", "verdict"],
+        },
+    },
 ]
 
 
@@ -602,6 +713,18 @@ def dispatch_tool_call(name: str, arguments: Dict[str, Any]) -> Any:
             study_type=str(arguments.get("study_type", "exploratory_clinical")),
             applied_lr_keys=[str(x) for x in arguments.get("applied_lr_keys", [])],
             kill_switch_tripped=bool(arguments.get("kill_switch_tripped", False)),
+        )
+    elif name == "tool_generate_social_and_pubpeer_brief":
+        return tool_generate_social_and_pubpeer_brief(
+            study_title=str(arguments.get("study_title", "")),
+            verdict=str(arguments.get("verdict", "")),
+            doi=arguments.get("doi"),
+            pmid=arguments.get("pmid"),
+            journal=arguments.get("journal"),
+            flagged_issues=arguments.get("flagged_issues"),
+            mathematical_proof=arguments.get("mathematical_proof"),
+            reproducible_code=arguments.get("reproducible_code"),
+            posterior_credibility_pct=float(arguments["posterior_credibility_pct"]) if arguments.get("posterior_credibility_pct") is not None else None,
         )
     else:
         raise ValueError(f"Unknown tool: {name}")
@@ -747,6 +870,16 @@ if __name__ == "__main__":
             ],
         )
         gate1_test = tool_gate1_provenance_and_retraction(doi="10.1016/j.ahj.2023.01.002")
-        print(json.dumps({"ci_test": ci_test, "manhattan_test": mv_test, "bayes_test": bayes_test, "gate1_test": gate1_test}, indent=2))
+        social_test = tool_generate_social_and_pubpeer_brief(
+            study_title="Example Paper Title Demonstrating Impossibilities",
+            verdict="HARD REJECT - KILL-SWITCH TRIPPED",
+            doi="10.1016/example.doi",
+            journal="Test Journal",
+            flagged_issues=["GRIM impossibility in Table 1", "Tortured phrase 'irregular backwoods'"],
+            mathematical_proof="Mean 4.13 with N=23 (sum=94.99; integer sum impossible)",
+            reproducible_code="scrutiny::grim_map(tibble(x=4.13, n=23))",
+            posterior_credibility_pct=0.0,
+        )
+        print(json.dumps({"ci_test": ci_test, "manhattan_test": mv_test, "bayes_test": bayes_test, "gate1_test": gate1_test, "social_test": social_test}, indent=2))
     else:
         run_stdio_jsonrpc_server()
