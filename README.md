@@ -1,13 +1,12 @@
 # Autonomous Forensic Research Auditing Pipeline (Universal Table & Chart Edition)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23861362.svg)](https://doi.org/10.5281/zenodo.23861362)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 An autonomous metascience and forensic peer-review framework for Google Antigravity, powered by `gemini-3.8-flash` under adversarial `/boost` verification.
 
 > [!TIP] Live Interactive GitHub Page & Bayesian Calculator
 > The live interactive web portal and Bayesian Credibility Calculator are available at:  
-> **[https://lauyeehow1986-hub.github.io/forensic_audit/](https://lauyeehow1986-hub.github.io/forensic_audit/)**
+> **[https://lauyeehow1986-hub.github.io/forensic_research_auditor/](https://lauyeehow1986-hub.github.io/forensic_research_auditor/)**
 
 This repository provides an automated, non-compensatory forensic auditing suite designed to evaluate scientific manuscripts, preprints, randomized clinical trials, and observational studies across all text sections, numerical tables (Table 1 through Table $N$), and data visualizations (scatterplots, forest plots, trend lines).
 
@@ -16,7 +15,7 @@ This repository provides an automated, non-compensatory forensic auditing suite 
 ## 1. Repository Architecture
 
 ```text
-forensic_audit/
+forensic_research_auditor/
 ├── .agents/
 │   └── mcp_config.json          # Model Context Protocol (MCP) server definitions
 ├── skills/
@@ -273,30 +272,6 @@ To ensure all deliverables read as authoritative, peer-reviewed metascience repo
 - **Strict Prohibition on Agent Drama:** Multi-agent internal debates, draft corrections, and cross-checking deliberations are kept internal. Narratives such as *"Agent 2 caught Agent 1"*, *"Challenging the prior investigation"*, or accusations of data fabrication against prior iterations are strictly prohibited.
 - **Silent Internal Reconciliation:** Discrepancies between subagents or analytical iterations are resolved internally and silently before generating the final deliverable.
 - **Objective Methodological Framing:** Explanations of statistical applicability (e.g., Benford's Law on scale-invariant empirical counts vs bounded ratios, Fine-Gray survival models vs scatterplot tail density, GRIM constraints on integer means) are framed exclusively on rigorous mathematical and biostatistical principles.
-
----
-
-## Citation
-
-If you use this autonomous forensic pipeline, MCP server, or auditing methodologies in your research, preprints, or publications, please cite it as follows:
-
-### BibTeX
-```bibtex
-@software{lau2026forensic_audit,
-  author       = {Lau, Yee How},
-  title        = {Autonomous Forensic Research Auditing Pipeline: Multi-Gate Metascience, 95\% CI Forensics, and Genomic Scrutiny Swarm},
-  year         = {2026},
-  publisher    = {Zenodo},
-  version      = {v2.0.0},
-  doi          = {10.5281/zenodo.23861362},
-  url          = {https://github.com/lauyeehow1986-hub/forensic_audit}
-}
-```
-
-### APA
-> Lau, Y. H. (2026). *Autonomous Forensic Research Auditing Pipeline: Multi-Gate Metascience, 95% CI Forensics, and Genomic Scrutiny Swarm* (Version 2.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23861362
-
-*(See [`CITATION.cff`](CITATION.cff) for standard citation metadata.)*
 
 ---
 
