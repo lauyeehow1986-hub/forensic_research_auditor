@@ -7,7 +7,6 @@ Deterministic MCP Server implementing standard Model Context Protocol (stdio JSO
 - Gate 3: NHST Statcheck, 95% CI Width/Symmetry/Imprecision Forensics, GRIM/DEBIT, Carlisle & Benford
 - Gate 3.5: Clinical Scatterplot Density + Manhattan & Volcano Plot Genomics Grounding (EMBL-EBI GWAS Catalog & Open Targets API)
 - Gate 4: Tier 2 Bayesian Credibility Calculator & GRADE Certainty Scorer
-- Dual-Bucket NHCS Affiliation Classifier
 """
 
 import json
@@ -456,34 +455,6 @@ def tool_gate4_registry_and_bayesian_score(
     }
 
 
-def tool_classify_nhcs_affiliation(affiliations_text: str) -> Dict[str, Any]:
-    """Classifies whether any author is affiliated with National Heart Centre Singapore (NHCS)."""
-    patterns = [
-        "national heart centre singapore",
-        "national heart center singapore",
-        "nhcs",
-        "nhris",
-        "national heart research institute singapore",
-        "5 hospital drive",
-        "169609",
-        "@nhcs.com.sg",
-        "singhealth duke-nus cardiovascular sciences",
-        "goh cardiovascular research grant",
-    ]
-    lower_aff = affiliations_text.lower()
-    matched = [p for p in patterns if p in lower_aff]
-    is_nhcs = len(matched) > 0
-    return {
-        "is_nhcs_affiliated": is_nhcs,
-        "matched_markers": matched,
-        "routing_buckets": (
-            ["bucket_1_all_publications"]
-            if is_nhcs
-            else ["bucket_1_all_publications", "bucket_2_excluding_nhcs"]
-        ),
-    }
-
-
 # Tool Definitions for MCP Tools List
 MCP_TOOLS_MANIFEST = [
     {
@@ -582,17 +553,6 @@ MCP_TOOLS_MANIFEST = [
             "required": ["study_type", "applied_lr_keys"],
         },
     },
-    {
-        "name": "tool_classify_nhcs_affiliation",
-        "description": "Classifies whether any author is affiliated with National Heart Centre Singapore (NHCS) for Dual-Bucket audit routing.",
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "affiliations_text": {"type": "string", "description": "Raw author affiliation text from publication"},
-            },
-            "required": ["affiliations_text"],
-        },
-    },
 ]
 
 
@@ -643,8 +603,6 @@ def dispatch_tool_call(name: str, arguments: Dict[str, Any]) -> Any:
             applied_lr_keys=[str(x) for x in arguments.get("applied_lr_keys", [])],
             kill_switch_tripped=bool(arguments.get("kill_switch_tripped", False)),
         )
-    elif name == "tool_classify_nhcs_affiliation":
-        return tool_classify_nhcs_affiliation(affiliations_text=str(arguments.get("affiliations_text", "")))
     else:
         raise ValueError(f"Unknown tool: {name}")
 

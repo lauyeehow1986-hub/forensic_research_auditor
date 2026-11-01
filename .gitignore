@@ -16,3 +16,7 @@ execute_*.R
 .Rhistory
 .RData
 .Rproj.user/
+
+# Python cache
+__pycache__/
+*.pyc

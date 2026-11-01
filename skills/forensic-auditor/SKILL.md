@@ -95,17 +95,19 @@ Inspect **every figure, clinical scatterplot, dose-response curve, forest plot, 
    - Calculate `Posterior_Odds = Prior_Odds * Product(LR_i)` and `Posterior_Probability = Posterior_Odds / (1 + Posterior_Odds)`.
 4. **NotebookLM Grounded Sync:** When the user's **Forensic Research Auditor** Gemini Notebook (`notebooks/6b8609aa-fa3d-4a82-a123-5ffe7b4518e1`) is available, cross-check against its sources or export the verified audit packet (`<ID>_gate1to3_verified.md`) into the notebook.
 
-## Required Output Structure
+## Required Output Structure & Mandatory Output File (.md)
 
-Always present the final audit using these 5 sections:
+Every forensic audit must automatically generate and write the complete findings to a persistent output Markdown file at `./audit_reports/audit_[STUDY_KEY].md` (creating `./audit_reports/` if not present), alongside delivering the final 5-section consensus directly in chat with a clickable file link to the report.
+
+Always format the deliverable using these 5 sections:
 
 1. **Executive Integrity Verdict:** (`PASS`, `QUALIFIED PASS`, `SKEPTICAL CAUTION`, or `HARD REJECT - KILL-SWITCH TRIPPED`)
 2. **Gate 1 & Gate 2 Provenance & Paper-Mill Summary:** Retraction status, registry ID, and tortured-phrase/reagent screen.
 3. **Gate 3 & Gate 3.5 Universal Table, 95% CI & Chart/Genomics Audit:**
-   - Inline `statcheck`, `GRIM`/`DEBIT`, and **95% CI Symmetry/Width/Imprecision** results (with verbatim R stdout if executed via RStudio MCP).
-   - Table 1 through Table N sample-size continuity, baseline balance, and `datacommons-mcp` population grounding.
+   - Inline `statcheck`, `GRIM`/`DEBIT`, and **95% CI Symmetry/Width/Imprecision** results (with verbatim R stdout if executed via RStudio MCP or exact recalculated p-values).
+   - Table 1 through Table N sample-size continuity, baseline balance, and macro-epidemiological population grounding.
    - Clinical scatterplot density (`SBP > 160`, etc.) AND Manhattan/volcano plot audit (`lambda_GC`, LD-tower chimney screen, FDR vs raw-p, and GWAS Catalog / Open Targets MCP grounding).
-4. **Gate 4 Outcome Switching & Cochrane RoB 2 Scorecard:** Registry alignment and domain-by-domain risk-of-bias table with verbatim quotes.
+4. **Gate 4 Outcome Switching & Methodological Risk of Bias Scorecard:** Registry alignment and domain-by-domain risk-of-bias table (Cochrane RoB 2 for RCTs, PROBAST for prediction models, ROBINS-I for observational cohorts) with verbatim quotes.
 5. **Tier 2 Bayesian Credibility Calculation:** Step-by-step table showing Prior Probability, each applied `LR_i` (including 95% CI imprecision/narrow-variance and genomics plot multipliers), final Posterior Credibility Percentage, and GRADE certainty rating.
 
 ## Supplementary Resources in This Skill

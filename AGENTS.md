@@ -41,3 +41,7 @@ Never rely on LLM mental math. Route each verification step to its dedicated MCP
 - Cochrane RoB 2 "Some Concerns" (2+ domains): `LR = 0.50`
 - Cochrane RoB 2 "High Risk" (any domain): `LR = 0.15`
 - Undeclared primary outcome switching: `LR = 0.05`
+
+## 4. Mandatory Deliverable Protocol
+Every forensic audit—whether passing or rejected—must generate a persistent Markdown audit report file in `./audit_reports/audit_[STUDY_KEY].md` containing the structured 5-section consensus findings, alongside the direct response in chat with a clickable file link to the report.
+
