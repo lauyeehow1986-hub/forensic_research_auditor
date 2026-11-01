@@ -273,6 +273,30 @@ To ensure all deliverables read as authoritative, peer-reviewed metascience repo
 
 ---
 
+## Citation
+
+If you use this autonomous forensic pipeline, MCP server, or auditing methodologies in your research, preprints, or publications, please cite it as follows:
+
+### BibTeX
+```bibtex
+@software{lau2026forensic_audit,
+  author       = {Lau, Yee How},
+  title        = {Autonomous Forensic Research Auditing Pipeline: Multi-Gate Metascience, 95\% CI Forensics, and Genomic Scrutiny Swarm},
+  year         = {2026},
+  publisher    = {Zenodo},
+  version      = {v2.0.0},
+  doi          = {10.5281/zenodo.placeholder},
+  url          = {https://github.com/lauyeehow1986-hub/forensic_audit}
+}
+```
+
+### APA
+> Lau, Y. H. (2026). *Autonomous Forensic Research Auditing Pipeline: Multi-Gate Metascience, 95% CI Forensics, and Genomic Scrutiny Swarm* (Version 2.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.placeholder
+
+*(See [`CITATION.cff`](CITATION.cff) for standard citation metadata.)*
+
+---
+
 ## License
 
 MIT License. Designed for academic research, metascience auditing, and computational peer review. Not for clinical decision-making.

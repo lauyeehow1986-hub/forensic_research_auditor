@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this software or forensic pipeline in your research, please cite it as below."
+authors:
+  - family-names: "Lau"
+    given-names: "Yee How"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+title: "Autonomous Forensic Research Auditing Pipeline: Multi-Gate Metascience, 95% CI Forensics, and Genomic Scrutiny Swarm"
+version: 2.0.0
+doi: 10.5281/zenodo.placeholder
+date-released: 2026-11-01
+url: "https://github.com/lauyeehow1986-hub/forensic_audit"
+repository-code: "https://github.com/lauyeehow1986-hub/forensic_audit"
+keywords:
+  - metascience
+  - forensic-peer-review
+  - paper-mill-detection
+  - statistical-consistency
+  - confidence-interval-forensics
+  - model-context-protocol
+  - ai-agents
+license: MIT
+abstract: >-
+  An autonomous metascience and forensic peer-review swarm for Google Antigravity
+  and Python/R environments. It performs a non-compensatory 4-gate lexicographic
+  triage (provenance & retraction screening, tortured phrases & paper-mill reagents,
+  universal table & 95% confidence interval consistency, and clinical chart /
+  genomics plot scrutiny) followed by Tier 2 Bayesian likelihood ratio credibility
+  scoring.
