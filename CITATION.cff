@@ -5,6 +5,7 @@ authors:
     given-names: "Yee How"
 title: "Autonomous Forensic Research Auditing Pipeline: Multi-Gate Metascience, 95% CI Forensics, and Genomic Scrutiny Swarm"
 version: "2.0.0"
+doi: "10.5281/zenodo.23861362"
 date-released: "2026-11-01"
 url: "https://github.com/lauyeehow1986-hub/forensic_audit"
 repository-code: "https://github.com/lauyeehow1986-hub/forensic_audit"

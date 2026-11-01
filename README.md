@@ -1,5 +1,8 @@
 # Autonomous Forensic Research Auditing Pipeline (Universal Table & Chart Edition)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23861362.svg)](https://doi.org/10.5281/zenodo.23861362)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 An autonomous metascience and forensic peer-review framework for Google Antigravity, powered by `gemini-3.8-flash` under adversarial `/boost` verification.
 
 > [!TIP] Live Interactive GitHub Page & Bayesian Calculator
@@ -285,13 +288,13 @@ If you use this autonomous forensic pipeline, MCP server, or auditing methodolog
   year         = {2026},
   publisher    = {Zenodo},
   version      = {v2.0.0},
-  doi          = {10.5281/zenodo.placeholder},
+  doi          = {10.5281/zenodo.23861362},
   url          = {https://github.com/lauyeehow1986-hub/forensic_audit}
 }
 ```
 
 ### APA
-> Lau, Y. H. (2026). *Autonomous Forensic Research Auditing Pipeline: Multi-Gate Metascience, 95% CI Forensics, and Genomic Scrutiny Swarm* (Version 2.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.placeholder
+> Lau, Y. H. (2026). *Autonomous Forensic Research Auditing Pipeline: Multi-Gate Metascience, 95% CI Forensics, and Genomic Scrutiny Swarm* (Version 2.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23861362
 
 *(See [`CITATION.cff`](CITATION.cff) for standard citation metadata.)*
 
