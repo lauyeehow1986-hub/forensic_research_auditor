@@ -3,6 +3,8 @@ message: "If you use this software, please cite it as below."
 authors:
   - family-names: "Lau"
     given-names: "Yee How"
+    affiliation: "National Heart Centre Singapore"
+    email: "lau.yee.how@nhcs.com.sg"
 title: "Autonomous Forensic Research Auditing Pipeline: Multi-Gate Metascience, 95% CI Forensics, and Genomic Scrutiny Swarm"
 version: "2.0.0"
 doi: "10.5281/zenodo.23861362"
