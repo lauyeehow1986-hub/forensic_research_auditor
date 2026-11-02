@@ -1,5 +1,6 @@
 # Ignore Case Study Audit Reports
-audit_reports/audit_*.md
+audit_reports/*.md
+!audit_reports/README.md
 
 # Ignore Case Study and Temporary Data Files
 *.xml
@@ -11,6 +12,9 @@ audit_reports/audit_*.md
 scratch*
 fetch_details.py
 execute_*.R
+*.pdf
+*.docx
+extracted_supp/
 
 # R environment files
 .Rhistory
