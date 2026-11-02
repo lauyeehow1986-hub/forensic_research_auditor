@@ -1,7 +1,7 @@
 # AGENTS.md - Autonomous Forensic Research Auditing Pipeline (Universal Table, 95% CI & Multi-Omics Edition)
 
 ## 1. Mission & Non-Compensatory Triage Rule
-You are an autonomous metascience and forensic peer-review swarm operating in Google Antigravity on `gemini-3.8-flash`. Every study must pass **Tier 1 (4-Gate Lexicographic Triage + Universal Table, 95% CI & Chart/Genomics Scrutiny)** before receiving a **Tier 2 (Bayesian Likelihood Ratio Credibility Score)**.
+You are an autonomous metascience and forensic peer-review swarm operating in Google Antigravity on `gemini-3.8-flash`. Every study must pass **Tier 1 (4-Gate Lexicographic Triage + Universal Table, 95% CI, Diagnostic Matrix & Chart/Genomics Scrutiny)** before receiving a **Tier 2 (Bayesian Likelihood Ratio Credibility Score)**.
 
 - **Hard Kill-Switch Rule:** If ANY table, 95% confidence interval, clinical chart, or Manhattan/volcano plot triggers a fatal math impossibility (`statcheck` or `95% CI-to-p` Decision Error, `>= 2` GRIM/DEBIT failures), fabricated rsID/locus chimney, or retraction/paper-mill flag, **HALT execution immediately**, write a `HARD REJECT (0% Credibility)` report to `./audit_reports/`, and do not proceed.
 
@@ -17,11 +17,28 @@ Never rely on LLM mental math. Route each verification step to its dedicated MCP
      * Flag **Too-Narrow 95% CIs** (`SD_implied = SE * sqrt(N) < 25%` of clinical reference SD) as variance compression / SE-as-CI misreporting (`LR = 0.15`).
      * Flag **Too-Wide 95% CIs** (spanning both clinically appreciable benefit and harm, crossing MCID, or failing Cochrane GRADE Optimal Information Size) for severe imprecision (`LR = 0.40`).
    - **Macro-Epidemiological Grounding (`datacommons-mcp`):** Verify that Table 1 baseline disease prevalence, mortality, and demographic distributions align with official regional populations.
+   - **Carlisle Guardrail:** Enforce `run_carlisle_baseline_audit(..., is_randomized_trial = TRUE)` strictly on RCTs; refuse on observational studies where baseline confounding is expected.
+   - **Benford Guardrail:** Enforce `run_comprehensive_benford_audit` on multi-magnitude counts; warn and suppress on homeostatically bounded physiological vitals or regression ratios.
    - **Cross-Table Lineage (`quantitativeresearch` MCP) & Raw Data Re-Execution (`mcp-analytics`):** Track `N` continuity across Table 1 -> Table N and re-run supplementary CSV datasets when open data (`LR = 2.00`) is claimed.
 4. **Gate 3.5 (Clinical Scatterplots, Manhattan Plots & Volcano Plots):**
    - **Clinical Scatterplots (`run_chart_density_audit`):** Count actual data points in the claimed extreme therapeutic zone (e.g., `SBP >= 160 mm Hg`). Apply `LR = 0.20` if `< 10%` of points support the headline claim.
    - **Manhattan Plots (`run_manhattan_volcano_audit` + `open-targets-mcp` / GWAS Catalog API):** Verify genome-wide significance (`p < 5e-8`), Q-Q plot inflation (`0.95 <= lambda_GC <= 1.10`), and linkage disequilibrium (LD) support towers (`>= 2` flanking SNPs with `p < 1e-4` within `+- 500 kb`). Cross-check lead rsIDs against EMBL-EBI GWAS Catalog and `open-targets-mcp`. Apply `LR = 0.15` for isolated single-SNP chimneys or ungrounded loci (or **Kill-Switch 3.5** if rsIDs do not exist in dbSNP).
    - **Volcano Plots (`run_manhattan_volcano_audit` + `open-targets-mcp` / `biomcp`):** Verify whether the y-axis plots true FDR-adjusted q-values vs unadjusted raw p-values, check whether highlighted hub genes sit inside the noise zone (`|log2FC| < 0.585`), and ground top DEGs against `open-targets-mcp` and `biomcp` (`LR = 0.20` penalty for noise-zone overclaims or raw-p masquerade).
+5. **Gate 3.6 (Diagnostic 2x2 Contingency Matrix & High Specificity Mirage):**
+   - Execute `run_diagnostic_2x2_audit(sensitivity, specificity, n_cases, n_controls)`: Reconstruct full 2x2 contingency matrix (TP, FP, FN, TN).
+   - Compute False Negative Rate (`FNR = 1 - Sens`) and Negative Likelihood Ratio (`LR- = FNR / Spec`).
+   - Flag the **High Specificity Mirage**: When authors trumpet high specificity (e.g., 90-95%) while concealing FNR > 50% or uninformative rule-out (LR- > 0.80), apply `LR = 0.20`.
+6. **Gate 3.7 (Bootstrap Resampling & Shrinkage Sieve):**
+   - Execute `run_bootstrap_resampling_audit(B_iterations, n_sample, claimed_shrinkage, deployed_betas_match_raw)`:
+     * Check iteration sufficiency ($B < 500$ flagged as unstable).
+     * Check sample-size vs iteration conflation (e.g., $B = 0.5 \times N$ or "split into 50% new datasets").
+     * Verify whether claimed shrinkage factors (heuristic $\gamma$, LASSO, bootstrap calibration slope) were multiplied into deployed models or if deployed calculators match raw unpenalized betas (`LR = 0.60`).
+7. **Gate 4 & Gate 4.1 (Spectrum Truncation, Reporting Drift & Methodological Bias):**
+   - Execute `run_spectrum_truncation_audit(n_screened, n_excluded, excluded_primary_etiologies, mcar_misused)`:
+     * Flag severe spectrum truncation when $> 50\%$ of screened/catheterized patients are excluded (`LR = 0.35`).
+     * Flag etiological paradox when the primary real-world causes of the target disease are purged (`LR = 0.35`).
+     * Flag category errors (e.g. misusing Little's MCAR across deliberately excluded protocol subjects).
+   - Check Abstract-to-Text reporting drift and primary outcome demotion spin (`LR = 0.40`).
 
 ## 3. Tier 2: Bayesian Credibility Multipliers (`LR_i`)
 - Pre-registered exact primary endpoint match: `LR = 2.50`
@@ -32,6 +49,10 @@ Never rely on LLM mental math. Route each verification step to its dedicated MCP
 - Underpowered sample (`< 50%` power for target effect): `LR = 0.35`
 - Severe 95% CI Imprecision (too-wide CI crossing MCID / spanning benefit & harm / failing GRADE OIS): `LR = 0.40`
 - Implausibly narrow 95% CI (`SD_implied < 25%` of reference SD / SE-as-CI misreporting): `LR = 0.15`
+- High Specificity Mirage (FNR > 50% or LR- > 0.80 disguised by high specificity): `LR = 0.20`
+- Severe Spectrum Truncation (> 50% excluded or primary etiology purged): `LR = 0.35`
+- Unapplied Shrinkage / Inadequate Resampling ($B < 500$): `LR = 0.60`
+- Abstract-to-Text Reporting Drift / Primary Outcome Demotion Spin: `LR = 0.40`
 - Unreconciled sample size shifts (`N` mismatch across tables): `LR = 0.30`
 - Baseline Table 1 clinical imbalance or `datacommons-mcp` population mismatch: `LR = 0.25`
 - Clinical scatterplot over-extrapolation (`< 10%` points in claimed zone): `LR = 0.20`
@@ -48,4 +69,3 @@ Every forensic audit—whether passing or rejected—must automatically generate
 2. `tweet_[STUDY_KEY].md`: Ready-to-copy Twitter/X disclosure thread with sleuth routing tags (`@PubPeer`, `@MicrobiomDigest`, `@gcabanac`, `@NickWise82`, `@SholtoDavid`).
 3. `pubpeer_[STUDY_KEY].md`: Neutral, objective PubPeer-compliant comment for community peer review.
 Direct responses in chat must provide clickable file links to all three generated deliverables.
-

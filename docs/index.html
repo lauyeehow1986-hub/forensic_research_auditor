@@ -312,10 +312,10 @@
           <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-bold text-sm mb-4">
             G3
           </div>
-          <h4 class="text-lg font-bold text-white">Universal Statistical Audit</h4>
-          <p class="text-xs text-slate-400 mt-1 font-mono">R 4.2+ · statcheck · scrutiny::grim_map · rsprite2</p>
+          <h4 class="text-lg font-bold text-white">Universal Stats &amp; 95% CI Audit</h4>
+          <p class="text-xs text-slate-400 mt-1 font-mono">statcheck · scrutiny · SPRITE · 95% CI Forensics</p>
           <p class="text-slate-300 text-sm mt-3 leading-relaxed">
-            Audits <strong class="text-slate-100">every single table</strong>. Recalculates all APA NHST values for decision errors; runs GRIM test across Table 1 (demographics) and Table 2+ (outcomes) for integer impossibilities; checks Carlisle baseline uniformity.
+            Audits <strong class="text-slate-100">every single table</strong>. Recalculates APA NHST values for decision errors; runs GRIM across Table 1 and Table 2+; evaluates 95% CI linear/log symmetry, variance compression (\(LR = 0.15\)), and GRADE imprecision (\(LR = 0.40\)).
           </p>
         </div>
 
@@ -324,22 +324,34 @@
           <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center font-bold text-sm mb-4">
             G3.5
           </div>
-          <h4 class="text-lg font-bold text-white">Universal Chart &amp; Density Audit</h4>
-          <p class="text-xs text-slate-400 mt-1 font-mono">R run_chart_density_audit()</p>
+          <h4 class="text-lg font-bold text-white">Charts &amp; Multi-Omics Scrutiny</h4>
+          <p class="text-xs text-slate-400 mt-1 font-mono">Scatterplots · Manhattan LD Towers · Volcano FDR</p>
           <p class="text-slate-300 text-sm mt-3 leading-relaxed">
-            Inspects scatterplots and forest plots. If authors claim broad clinical efficacy in severe spectrums, but data density in that range is &lt; 5.0%, applies an automatic penalty (<code class="text-purple-300 text-xs font-mono">LR = 0.20</code>).
+            Inspects clinical scatterplots for extreme zone under-representation (&lt; 10% data density, \(LR = 0.20\)), screens Manhattan plots for single-SNP isolated chimneys (\(LR = 0.15\)), and catches volcano plot raw-\(p\) masquerading as FDR (\(LR = 0.20\)).
           </p>
         </div>
 
-        <!-- GATE 4 -->
+        <!-- GATE 3.6 & 3.7 -->
+        <div class="p-6 rounded-2xl glass hover:border-emerald-500/40 transition-all">
+          <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center justify-center font-bold text-sm mb-4">
+            G3.6/7
+          </div>
+          <h4 class="text-lg font-bold text-white">Diagnostic 2x2 &amp; Bootstrap Sieve</h4>
+          <p class="text-xs text-slate-400 mt-1 font-mono">High Specificity Mirage · Shrinkage Sieve</p>
+          <p class="text-slate-300 text-sm mt-3 leading-relaxed">
+            Reconstructs 2x2 contingency tables to catch the High Specificity Mirage (\(FNR &gt; 50\%\) or \(LR- &gt; 0.80\), \(LR = 0.20\)), verifies bootstrap iteration sufficiency (\(B \ge 500\)), and tests whether claimed shrinkage was applied to deployed betas (\(LR = 0.60\)).
+          </p>
+        </div>
+
+        <!-- GATE 4 & 4.1 -->
         <div class="p-6 rounded-2xl glass hover:border-emerald-500/40 transition-all">
           <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold text-sm mb-4">
             G4
           </div>
-          <h4 class="text-lg font-bold text-white">Pre-Registration &amp; RoB 2</h4>
-          <p class="text-xs text-slate-400 mt-1 font-mono">ClinicalTrials.gov v2 · Cochrane RoB 2</p>
+          <h4 class="text-lg font-bold text-white">Pre-Reg, Drift &amp; Spectrum Flow</h4>
+          <p class="text-xs text-slate-400 mt-1 font-mono">ClinicalTrials.gov · Reporting Drift · Spectrum Truncation</p>
           <p class="text-slate-300 text-sm mt-3 leading-relaxed">
-            Programmatically diffs published articles against inception trial registry JSONs. Flags outcome demotion, silent switching to safety, and badging post-hoc subgroups as "pre-specified".
+            Diffs manuscripts against inception trial registries for outcome demotion and abstract-to-text drift (\(LR = 0.40\)), audits cohort attrition for severe spectrum truncation (&gt; 50% excluded) and etiological purging (\(LR = 0.35\)), and grades Cochrane RoB 2.
           </p>
         </div>
 
@@ -503,6 +515,30 @@
                   <span class="text-xs text-slate-300">
                     <strong class="text-rose-300 block">Severe Benford First-Digit Anomaly (\(LR = 0.10\))</strong>
                     Numerical tables fail multi-magnitude distribution test.
+                  </span>
+                </label>
+
+                <label class="flex items-start space-x-3 p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700 cursor-pointer transition-colors">
+                  <input type="checkbox" id="flagSpecificityMirage" class="mt-1 h-4 w-4 rounded border-slate-700 text-rose-500 focus:ring-rose-400">
+                  <span class="text-xs text-slate-300">
+                    <strong class="text-rose-300 block">High Specificity Mirage (\(LR = 0.20\))</strong>
+                    Touting \(\ge 90\%\) specificity while concealing FNR &gt; 50% or uninformative rule-out (\(LR- &gt; 0.80\)) (Gate 3.6).
+                  </span>
+                </label>
+
+                <label class="flex items-start space-x-3 p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700 cursor-pointer transition-colors">
+                  <input type="checkbox" id="flagSpectrumTruncation" class="mt-1 h-4 w-4 rounded border-slate-700 text-rose-500 focus:ring-rose-400">
+                  <span class="text-xs text-slate-300">
+                    <strong class="text-rose-300 block">Severe Spectrum Truncation &amp; Purging (\(LR = 0.35\))</strong>
+                    Excluding &gt; 50% of screened cohort or purging primary real-world etiologies (Gate 4.1).
+                  </span>
+                </label>
+
+                <label class="flex items-start space-x-3 p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700 cursor-pointer transition-colors">
+                  <input type="checkbox" id="flagUnappliedShrinkage" class="mt-1 h-4 w-4 rounded border-slate-700 text-rose-500 focus:ring-rose-400">
+                  <span class="text-xs text-slate-300">
+                    <strong class="text-rose-300 block">Unapplied Shrinkage / Resampling Deficit (\(LR = 0.60\))</strong>
+                    Deployed formulas/calculators use raw unpenalized betas or \(B &lt; 500\) bootstrap iterations (Gate 3.7).
                   </span>
                 </label>
               </div>
@@ -750,6 +786,9 @@
       if (document.getElementById('flagRobHigh').checked) lrProduct *= 0.15;
       if (document.getElementById('flagCoIntervention').checked) lrProduct *= 0.50;
       if (document.getElementById('flagBenford').checked) lrProduct *= 0.10;
+      if (document.getElementById('flagSpecificityMirage')?.checked) lrProduct *= 0.20;
+      if (document.getElementById('flagSpectrumTruncation')?.checked) lrProduct *= 0.35;
+      if (document.getElementById('flagUnappliedShrinkage')?.checked) lrProduct *= 0.60;
 
       // Bonuses
       if (document.getElementById('flagPreregPass').checked) lrProduct *= 2.50;

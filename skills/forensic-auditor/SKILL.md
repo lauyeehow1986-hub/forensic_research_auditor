@@ -1,15 +1,15 @@
 ---
 name: forensic-research-auditor
-description: Audits scientific publications, preprints, clinical trials, DOIs, PMIDs, and PDFs for statistical fabrication (GRIM, statcheck, SPRITE, Benford, 95% CI symmetry/variance compression), GRADE CI imprecision, paper-mill tortured phrases, retraction status, outcome switching, Cochrane RoB 2 methodological bias, universal table consistency, clinical scatterplot density, and Manhattan/volcano plot genomics grounding via MCP. Use whenever the user asks to vet, audit, fact-check, critique, or evaluate a research paper, clinical trial, or study results.
+description: Audits scientific publications, preprints, clinical trials, DOIs, PMIDs, and PDFs for statistical fabrication (GRIM, statcheck, SPRITE, Benford, 95% CI symmetry/variance compression), diagnostic 2x2 matrices (High Specificity Mirage), bootstrap shrinkage, spectrum truncation, GRADE CI imprecision, paper-mill tortured phrases, retraction status, outcome switching, Cochrane RoB 2 methodological bias, universal table consistency, clinical scatterplot density, and Manhattan/volcano plot genomics grounding via MCP. Use whenever the user asks to vet, audit, fact-check, critique, or evaluate a research paper, clinical trial, or study results.
 ---
 # Forensic Research Auditor (Universal Table, 95% CI & Multi-Omics Plot Edition)
 
-A comprehensive metascience and forensic peer-review workflow designed for both Gemini (with NotebookLM integration) and Google Antigravity (`gemini-3.8-flash` with MCP orchestration and RStudio execution). It evaluates scientific studies across a **4-Gate Lexicographic Triage** (fast-fail kill-switches) followed by **Tier 2 Bayesian Likelihood Ratio credibility scoring**, ensuring every table (Table 1 through Table N), every 95% confidence interval (CI), and every clinical/genomic figure (scatterplots, forest plots, Manhattan plots, and volcano plots) is audited for mathematical consistency, external MCP grounding, and clinical relevancy.
+A comprehensive metascience and forensic peer-review workflow designed for both Gemini (with NotebookLM integration) and Google Antigravity (`gemini-3.8-flash` with MCP orchestration and RStudio execution). It evaluates scientific studies across a **4-Gate Lexicographic Triage** (fast-fail kill-switches) followed by **Tier 2 Bayesian Likelihood Ratio credibility scoring**, ensuring every table (Table 1 through Table N), every 95% confidence interval (CI), diagnostic 2x2 contingency matrix, bootstrap resampling protocol, cohort inclusion/exclusion flow, and every clinical/genomic figure (scatterplots, forest plots, Manhattan plots, and volcano plots) is audited for mathematical consistency, external MCP grounding, and clinical relevancy.
 
 ## When to Use
 
-- The user asks to audit, vet, fact-check, or evaluate a scientific paper, clinical trial, GWAS/transcriptomics study, preprint, DOI, PMID, arXiv ID, or uploaded study PDF.
-- The user wants to check if a paper's results are flawed, p-hacked, underpowered/imprecise (wide 95% CI), variance-compressed (too-narrow 95% CI), over-extrapolated, or fabricated.
+- The user asks to audit, vet, fact-check, or evaluate a scientific paper, clinical trial, diagnostic prediction model, GWAS/transcriptomics study, preprint, DOI, PMID, arXiv ID, or uploaded study PDF.
+- The user wants to check if a paper's results are flawed, p-hacked, underpowered/imprecise (wide 95% CI), variance-compressed (too-narrow 95% CI), over-extrapolated, diagnostically distorted (High Specificity Mirage), un-shrunk, cohort-purged (spectrum truncation), or fabricated.
 - The user wants to generate or run a 4-Gate Forensic Audit packet for their Gemini Notebook (`Forensic Research Auditor`) or Google Antigravity workspace.
 
 ## Core Workflow: The 4-Gate Triage & Universal Table/CI/Chart Audit
@@ -46,8 +46,8 @@ Do not restrict statistical checks to Table 1. Audit **every summary, outcome, s
    - **Too-Wide 95% CI (GRADE Imprecision & Low Clinical Relevancy):** Evaluate against Cochrane GRADE Optimal Information Size (OIS) and Minimal Clinically Important Difference (MCID). If the 95% CI spans both clinically appreciable benefit and appreciable harm, or its width exceeds `2 * MCID` with `< 300` dichotomous events (`< 400` continuous N), apply the **Severe 95% CI Imprecision Penalty (`LR = 0.40`)**.
 3. **Universal Granularity Audit (`GRIM`, `GRIMMER`, `DEBIT`):** Across all tables reporting integer/discrete data or Likert scales (where sample size `N < 100` for 2 decimal places), test whether `round(round(Mean * N) / N, 2)` matches the reported mean (`GRIM`) and whether binary proportions match their standard deviations (`DEBIT`).
 4. **Sample Size (`N`) Continuity & Knowledge Graph Lineage (`quantitativeresearch` MCP):** Cross-check sample sizes and variable definitions from Table 1 through all outcome and subgroup tables. Flag any unexplained sample size shifts or missingness not accounted for in the CONSORT flow diagram.
-5. **Carlisle Baseline Table 1 & Macro-Epidemiological Grounding (`datacommons-mcp`):** In RCTs, inspect Table 1 baseline differences across arms for implausible uniformity (`p > 0.9999` hyper-balance) or severe baseline imbalance (`p < 0.0001`). In observational/epidemiological cohorts, cross-check baseline prevalence and incidence rates against `datacommons-mcp` regional statistics.
-6. **Multi-Magnitude Numerical Tables (`Benford's Law`) & Raw Data Re-Execution (`mcp-analytics`):** For regression tables, hazard ratios, or large count tables, check first-digit conformity using `benford.analysis`. When supplementary raw data CSVs are provided, execute verification models via `mcp-analytics` or `rstudio-mcp`.
+5. **Carlisle Baseline Table 1 & Macro-Epidemiological Grounding (`datacommons-mcp`):** In RCTs, inspect Table 1 baseline differences across arms for implausible uniformity (`p > 0.9999` hyper-balance) or severe baseline imbalance (`p < 0.0001`). In observational/epidemiological cohorts, refuse the Carlisle uniformity test (as baseline confounding is expected) and cross-check baseline prevalence and incidence rates against `datacommons-mcp` regional statistics.
+6. **Multi-Magnitude Numerical Tables (`Benford's Law`) & Raw Data Re-Execution (`mcp-analytics`):** For regression tables, hazard ratios, or large count tables spanning multiple orders of magnitude, check first-digit conformity using `benford.analysis`. Do NOT apply Benford's Law to homeostatically bounded physiological vitals or regression ratios. When supplementary raw data CSVs are provided, execute verification models via `mcp-analytics` or `rstudio-mcp`.
 7. **Execution Rule:** In Google Antigravity, run `scripts/audit_paper.R` via `rstudio-mcp` and paste the verbatim R console stdout block into the report. Never perform mental math to fake R console output.
 8. **Kill-Switch 3:** Halt and reject if `>= 2` GRIM/DEBIT impossibilities occur, a primary `statcheck` or `95% CI-to-p` Decision Error is found, or `SPRITE` shows impossible scale variance.
 
@@ -67,11 +67,39 @@ Inspect **every figure, clinical scatterplot, dose-response curve, forest plot, 
    - **External MCP Grounding:** Cross-check claimed differentially expressed hub genes against `open-targets-mcp` and `biomcp` for tissue expression specificity and pathway concordance.
 5. **Over-Extrapolation & Genomics Artifact Penalty / Kill-Switch:** Apply `LR = 0.20` for clinical scatterplot over-extrapolation (`< 10%` points in claimed range) or volcano-plot FDR/noise-zone misrepresentation, and `LR = 0.15` (or **Kill-Switch 3.5** if rsIDs/loci are fabricated) for Manhattan plot chimney/grounding failures.
 
-### Step 5: Gate 4 - Pre-Registration, Risk of Bias & Bayesian Credibility Scorecard (`thinkingLevel: "high"`)
+### Step 4b: Gate 3.6 - Diagnostic 2x2 Matrix & High Specificity Mirage (`thinkingLevel: "high"`)
+
+When auditing diagnostic tests, biomarkers, AI classifiers, or triage risk scores (`run_diagnostic_2x2_audit`):
+
+1. **Reconstruct Full 2x2 Contingency Matrix:** Reconstruct true positives (TP), false positives (FP), false negatives (FN), and true negatives (TN) from reported sensitivity, specificity, and sample sizes ($N_{cases}, N_{controls}$).
+2. **False Negative Rate (FNR) & Negative Likelihood Ratio (LR-):** Compute `FNR = 1 - Sensitivity` and `LR- = (1 - Sensitivity) / Specificity`.
+3. **The "High Specificity Mirage" Sieve:** Authors frequently trumpet "impressive 90-95% specificity!" in abstracts to mask a disastrously poor rule-out performance where Sensitivity is `< 50%` (`FNR > 50%`) or `LR- > 0.80`. A negative test result fails to rule out the condition, leaving the majority of diseased patients undetected.
+4. **PPV / NPV Discrepancy & Spectrum Distortion:** Compare reported predictive values against reconstructed values based on realistic disease prevalence. Flag cases where authors report optimistic cohort-derived PPV/NPV while concealing extreme positive-to-negative imbalance.
+5. **Bayesian Penalty:** Apply `LR = 0.20` if the High Specificity Mirage is detected.
+
+### Step 4c: Gate 3.7 - Bootstrap Resampling & Shrinkage Sieve (`thinkingLevel: "high"`)
+
+When auditing prediction models, multivariable regression models, or clinical risk nomograms (`run_bootstrap_resampling_audit`):
+
+1. **Iteration Sufficiency Sieve:** Check the number of bootstrap resampling iterations $B$. Flag models utilizing $B < 500$ iterations as numerically unstable and under-resampled.
+2. **Sample Size vs. Iteration Conflation:** Detect category errors where authors report "we bootstrapped 50% of the sample" or $B = 0.5 \times N$ or "split into 50% new datasets", conflating cross-validation/subsampling proportions with bootstrap repetitions $B$.
+3. **Unapplied Shrinkage / Cosmetic Optimism Correction:** Verify whether claimed heuristic shrinkage factors (e.g. $\gamma = \frac{\chi^2 - p}{\chi^2}$ or uniform shrinkage $\approx 0.85$), LASSO penalties, or bootstrap calibration slopes were actually multiplied into deployed beta coefficients. If the published nomogram, scoring formula, or web risk calculator uses unpenalized raw maximum-likelihood betas (`deployed_betas_match_raw == TRUE`), flag the shrinkage claims as cosmetic posturing.
+4. **Bayesian Penalty:** Apply `LR = 0.60` if unapplied shrinkage or inadequate resampling ($B < 500$) is detected.
+
+### Step 5: Gate 4 - Pre-Registration, Risk of Bias & Reporting Drift (`thinkingLevel: "high"`)
 
 1. **Pre-Registration & Outcome Switching Check:** Compare the published primary and secondary endpoints (and assessment timepoints) against the timestamped registry record (`NCT` on ClinicalTrials.gov, `OSF`, `ISRCTN`, `PROSPERO`), tracked via `quantitativeresearch` MCP.
-2. **Methodological Risk of Bias Grading:** Grade all 5 **Cochrane RoB 2** domains (for RCTs), 7 **ROBINS-I V2** domains (for observational studies), or **AMSTAR 2** domains (for systematic reviews), citing verbatim quotes from the text.
-3. **Tier 2 Bayesian Credibility Calculation:**
+2. **Abstract-to-Text Reporting Drift:** Cross-check effect sizes, p-values, sample sizes, and primary outcome definitions between the Abstract and the Results/Discussion text:
+   - Identify outcome demotion where statistically non-significant primary endpoints are softened or replaced in the Abstract by secondary subgroup p-values.
+   - Detect selective metric inflation (e.g., reporting relative risk reduction RRR in the Abstract while concealing near-zero absolute risk reduction ARR in the text).
+   - If severe reporting drift or outcome demotion spin is identified, apply `LR = 0.40`.
+3. **Gate 4.1: Spectrum Truncation & Etiological Purging (`run_spectrum_truncation_audit`):**
+   - **Exclusion Rate Forensics:** Calculate the percentage of screened/eligible patients excluded (`exclusion_rate = n_excluded / n_screened`). Flag moderate truncation if $> 30\%$ and severe truncation if $> 50\%$.
+   - **Etiological Paradox / Purging:** Check whether authors deliberately excluded the primary real-world etiologies of the target pathology (e.g., excluding ischemic cardiomyopathy or severe valve disease from a heart failure cohort, or excluding prior MI/stents from a CAD biomarker study). Purging real-world etiologies creates an artificial "toy cohort" that inflates C-statistics/AUC while ensuring the model fails in clinical practice.
+   - **MCAR Category Errors:** Detect whether authors misused Little's Missing Completely At Random (MCAR) test across patients who were deliberately excluded by protocol/discretion rather than unobserved item fields.
+   - **Bayesian Penalty:** Apply `LR = 0.35` for severe spectrum truncation ($> 50\%$) or etiological purging.
+4. **Methodological Risk of Bias Grading:** Grade all 5 **Cochrane RoB 2** domains (for RCTs), 7 **ROBINS-I V2** domains (for observational studies), **PROBAST** (for prediction models), or **AMSTAR 2** domains (for systematic reviews), citing verbatim quotes from the text.
+5. **Tier 2 Bayesian Credibility Calculation:**
    - Start with the baseline Field Prior Probability (`P_prior = 0.50` for confirmatory RCT; `0.30` for exploratory clinical/biomedical/psychology study; `0.20` for observational epidemiology or discovery multi-omics).
    - Compute `Prior_Odds = P_prior / (1 - P_prior)`.
    - Multiply by all applicable Likelihood Ratios (`LR_i`):
@@ -83,6 +111,10 @@ Inspect **every figure, clinical scatterplot, dose-response curve, forest plot, 
      - Underpowered sample (`< 50%` power for target effect): `LR = 0.35`
      - Severe 95% CI Imprecision (too-wide CI crossing MCID / spanning appreciable benefit & harm, or failing GRADE OIS): `LR = 0.40`
      - Suspiciously narrow 95% CI (`SD_implied < 25%` of reference SD or SE-as-CI misreporting): `LR = 0.15`
+     - High Specificity Mirage (FNR > 50% or LR- > 0.80 disguised by high specificity): `LR = 0.20`
+     - Severe Spectrum Truncation (> 50% excluded or primary etiology purged): `LR = 0.35`
+     - Unapplied Shrinkage / Inadequate Resampling ($B < 500$): `LR = 0.60`
+     - Abstract-to-Text Reporting Drift / Primary Outcome Demotion Spin: `LR = 0.40`
      - Unreconciled sample size (`N`) shifts across tables: `LR = 0.30`
      - Scatterplot over-extrapolation / sparse tail density (`< 10%` points in claimed range): `LR = 0.20`
      - Volcano plot unadjusted-p-as-FDR masquerade or noise-zone (`|log2FC| < 0.585`) hub-gene overclaim: `LR = 0.20`
@@ -93,7 +125,7 @@ Inspect **every figure, clinical scatterplot, dose-response curve, forest plot, 
      - Cochrane RoB 2 "High Risk" (any domain): `LR = 0.15`
      - Undeclared primary outcome switching: `LR = 0.05`
    - Calculate `Posterior_Odds = Prior_Odds * Product(LR_i)` and `Posterior_Probability = Posterior_Odds / (1 + Posterior_Odds)`.
-4. **NotebookLM Grounded Sync:** When the user's **Forensic Research Auditor** Gemini Notebook (`notebooks/6b8609aa-fa3d-4a82-a123-5ffe7b4518e1`) is available, cross-check against its sources or export the verified audit packet (`<ID>_gate1to3_verified.md`) into the notebook.
+6. **NotebookLM Grounded Sync:** When the user's **Forensic Research Auditor** Gemini Notebook (`notebooks/6b8609aa-fa3d-4a82-a123-5ffe7b4518e1`) is available, cross-check against its sources or export the verified audit packet (`<ID>_gate1to3_verified.md`) into the notebook.
 
 ## Required Output Structure & Mandatory Deliverables (.md)
 
@@ -107,15 +139,19 @@ Always format the deliverable using these 5 sections:
 
 1. **Executive Integrity Verdict:** (`PASS`, `QUALIFIED PASS`, `SKEPTICAL CAUTION`, or `HARD REJECT - KILL-SWITCH TRIPPED`)
 2. **Gate 1 & Gate 2 Provenance & Paper-Mill Summary:** Retraction status, registry ID, and tortured-phrase/reagent screen.
-3. **Gate 3 & Gate 3.5 Universal Table, 95% CI & Chart/Genomics Audit:**
+3. **Gate 3, Gate 3.5, Gate 3.6 & Gate 3.7 Universal Table, 95% CI & Diagnostic/Resampling Audit:**
    - Inline `statcheck`, `GRIM`/`DEBIT`, and **95% CI Symmetry/Width/Imprecision** results (with verbatim R stdout if executed via RStudio MCP or exact recalculated p-values).
+   - Diagnostic 2x2 contingency matrix, False Negative Rate, Negative Likelihood Ratio, and High Specificity Mirage audit (`run_diagnostic_2x2_audit`).
+   - Bootstrap iteration sufficiency ($B \ge 500$), sample size conflation, and deployed shrinkage verification (`run_bootstrap_resampling_audit`).
    - Table 1 through Table N sample-size continuity, baseline balance, and macro-epidemiological population grounding.
    - Clinical scatterplot density (`SBP > 160`, etc.) AND Manhattan/volcano plot audit (`lambda_GC`, LD-tower chimney screen, FDR vs raw-p, and GWAS Catalog / Open Targets MCP grounding).
-4. **Gate 4 Outcome Switching & Methodological Risk of Bias Scorecard:** Registry alignment and domain-by-domain risk-of-bias table (Cochrane RoB 2 for RCTs, PROBAST for prediction models, ROBINS-I for observational cohorts) with verbatim quotes.
-5. **Tier 2 Bayesian Credibility Calculation:** Step-by-step table showing Prior Probability, each applied `LR_i` (including 95% CI imprecision/narrow-variance and genomics plot multipliers), final Posterior Credibility Percentage, and GRADE certainty rating.
+4. **Gate 4 Outcome Switching, Methodological Risk of Bias & Spectrum Truncation Scorecard:**
+   - Registry alignment, abstract-to-text reporting drift, and domain-by-domain risk-of-bias table (Cochrane RoB 2 for RCTs, PROBAST for prediction models, ROBINS-I for observational cohorts) with verbatim quotes.
+   - Spectrum truncation and etiological purging audit (`run_spectrum_truncation_audit`).
+5. **Tier 2 Bayesian Credibility Calculation:** Step-by-step table showing Prior Probability, each applied `LR_i` (including 95% CI imprecision/narrow-variance, High Specificity Mirage, unapplied shrinkage, and genomics plot multipliers), final Posterior Credibility Percentage, and GRADE certainty rating.
 
 ## Supplementary Resources in This Skill
 
-- `references/audit_paper_r.md`: Complete R forensic script (`statcheck`, `scrutiny::grim_map`, `rsprite2`, `benford.analysis`, Carlisle baseline check, `run_chart_density_audit`, `run_ci_consistency_and_width_audit`, and `run_manhattan_volcano_audit`).
+- `references/audit_paper_r.md`: Complete R forensic script (`statcheck`, `scrutiny::grim_map`, `rsprite2`, `benford.analysis`, Carlisle baseline check, `run_chart_density_audit`, `run_ci_consistency_and_width_audit`, `run_manhattan_volcano_audit`, `run_diagnostic_2x2_audit`, `run_bootstrap_resampling_audit`, and `run_spectrum_truncation_audit`).
 - `references/antigravity_kit.md`: Drop-in `AGENTS.md` Master Prompt for `gemini-3.8-flash` and `.agents/mcp_config.json` with all 10 MCP servers wired up.
 - `references/example_42802996_audit.md`: Reference audit packet demonstrating Gate 1-4 evaluation including 95% CI width/consistency and scatterplot density auditing.
