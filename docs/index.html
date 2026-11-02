@@ -541,6 +541,38 @@
                     Deployed formulas/calculators use raw unpenalized betas or \(B &lt; 500\) bootstrap iterations (Gate 3.7).
                   </span>
                 </label>
+
+                <label class="flex items-start space-x-3 p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700 cursor-pointer transition-colors">
+                  <input type="checkbox" id="flagCochranSparse" class="mt-1 h-4 w-4 rounded border-slate-700 text-rose-500 focus:ring-rose-400">
+                  <span class="text-xs text-slate-300">
+                    <strong class="text-rose-300 block">Cochran Rule Violation on Sparse Tables (\(LR = 0.20\))</strong>
+                    Uncorrected Pearson \(\chi^2\) used on cells with expected counts &lt; 5 instead of Fisher&#39;s exact test (Gate 3.8).
+                  </span>
+                </label>
+
+                <label class="flex items-start space-x-3 p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700 cursor-pointer transition-colors">
+                  <input type="checkbox" id="flagLogitLinearity" class="mt-1 h-4 w-4 rounded border-slate-700 text-rose-500 focus:ring-rose-400">
+                  <span class="text-xs text-slate-300">
+                    <strong class="text-rose-300 block">Skewed Ratio Modeled Linearly Without Splines (\(LR = 0.35\))</strong>
+                    Right-skewed biological ratios (e.g. \(E/e&#39;\), ACR) entered as linear continuous terms without evaluating non-linearity (Gate 3.9).
+                  </span>
+                </label>
+
+                <label class="flex items-start space-x-3 p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700 cursor-pointer transition-colors">
+                  <input type="checkbox" id="flagPopulationCutoff" class="mt-1 h-4 w-4 rounded border-slate-700 text-rose-500 focus:ring-rose-400">
+                  <span class="text-xs text-slate-300">
+                    <strong class="text-rose-300 block">Paradoxical Population-Cutoff Discordance (\(LR = 0.25\))</strong>
+                    Purporting an Asian-tailored score but importing Western thresholds (e.g. BMI &gt; 30 vs WHO Asian \(\ge 27.5\)) (Gate 4.2).
+                  </span>
+                </label>
+
+                <label class="flex items-start space-x-3 p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-slate-700 cursor-pointer transition-colors">
+                  <input type="checkbox" id="flagDescriptiveMismatch" class="mt-1 h-4 w-4 rounded border-slate-700 text-rose-500 focus:ring-rose-400">
+                  <span class="text-xs text-slate-300">
+                    <strong class="text-rose-300 block">Methods-to-Table Descriptive Mismatch (\(LR = 0.40\))</strong>
+                    Methods claim mean \(\pm\) SD &amp; \(t\)-test but tables report medians, or parametric tests used on skewed data (Gate 4.3).
+                  </span>
+                </label>
               </div>
             </div>
 
@@ -789,6 +821,10 @@
       if (document.getElementById('flagSpecificityMirage')?.checked) lrProduct *= 0.20;
       if (document.getElementById('flagSpectrumTruncation')?.checked) lrProduct *= 0.35;
       if (document.getElementById('flagUnappliedShrinkage')?.checked) lrProduct *= 0.60;
+      if (document.getElementById('flagCochranSparse')?.checked) lrProduct *= 0.20;
+      if (document.getElementById('flagLogitLinearity')?.checked) lrProduct *= 0.35;
+      if (document.getElementById('flagPopulationCutoff')?.checked) lrProduct *= 0.25;
+      if (document.getElementById('flagDescriptiveMismatch')?.checked) lrProduct *= 0.40;
 
       // Bonuses
       if (document.getElementById('flagPreregPass').checked) lrProduct *= 2.50;

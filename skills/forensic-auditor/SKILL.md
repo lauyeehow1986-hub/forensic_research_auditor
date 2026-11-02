@@ -86,6 +86,24 @@ When auditing prediction models, multivariable regression models, or clinical ri
 3. **Unapplied Shrinkage / Cosmetic Optimism Correction:** Verify whether claimed heuristic shrinkage factors (e.g. $\gamma = \frac{\chi^2 - p}{\chi^2}$ or uniform shrinkage $\approx 0.85$), LASSO penalties, or bootstrap calibration slopes were actually multiplied into deployed beta coefficients. If the published nomogram, scoring formula, or web risk calculator uses unpenalized raw maximum-likelihood betas (`deployed_betas_match_raw == TRUE`), flag the shrinkage claims as cosmetic posturing.
 4. **Bayesian Penalty:** Apply `LR = 0.60` if unapplied shrinkage or inadequate resampling ($B < 500$) is detected.
 
+### Step 4d: Gate 3.8 - Cochran Sparse Table & Expected Count Sieve (`thinkingLevel: "high"`)
+
+When auditing categorical baseline tables, adverse events, or subgroup contingency tables (`run_cochran_sparse_table_audit`):
+
+1. **Reconstruct Expected Cell Frequencies:** For any $2 \times 2$ or $r \times c$ table, compute expected counts $E_{ij} = \frac{R_i \times C_j}{N}$.
+2. **Cochran's Rule Forensics:** Flag violation if any expected cell count is $< 1$, or if $> 20\%$ of cells have expected counts $< 5$.
+3. **Inappropriate Asymptotic Chi-Square Detection:** Compare the reported p-value against recalculations from uncorrected Pearson's $\chi^2$, Yates' continuity-corrected $\chi^2$, and Fisher's exact test. Flag papers that mechanically ran uncorrected Pearson's $\chi^2$ on sparse tables (e.g. rare surgeries, sparse comorbidities like CABG $n=3$) while ignoring software warning flags and failing to apply Fisher's exact test.
+4. **Bayesian Penalty:** Apply `LR = 0.20` if uncorrected Pearson $\chi^2$ was run on sparse cells violating Cochran's rule.
+
+### Step 4e: Gate 3.9 - Logit Linearity & Continuous Ratio Skewness Sieve (`thinkingLevel: "high"`)
+
+When auditing continuous hemodynamic, echocardiographic, or biomarker variables in multivariable regression (`run_logit_linearity_and_ratio_audit`):
+
+1. **Linearity on the Logit Scale:** Audit variables entered linearly into logistic or Cox models. Strictly positive, heavy-tailed biological ratios ($E/e'$, albumin-to-creatinine ratio, NT-proBNP, troponin) violate logit linearity ($\ln(\text{odds}) = \beta \cdot X$) because biological effect curves saturate or exhibit steep non-linear risk tiers.
+2. **Outlier Leverage Vulnerability:** In right-skewed variables, extreme outliers exert high leverage on maximum likelihood coefficients ($\hat{\beta}$), distorting risk prediction across central clinical ranges.
+3. **Non-Linear Alternatives:** Check whether authors tested for non-linearity using Restricted Cubic Splines (RCS, 3–4 knots), applied stabilizing transformations ($\ln(X)$), or utilized established guideline cutoffs (e.g., ASE/EACVI $E/e' > 14$).
+4. **Bayesian Penalty:** Apply `LR = 0.35` if skewed continuous ratios are modeled linearly without evaluating non-linearity or outlier leverage.
+
 ### Step 5: Gate 4 - Pre-Registration, Risk of Bias & Reporting Drift (`thinkingLevel: "high"`)
 
 1. **Pre-Registration & Outcome Switching Check:** Compare the published primary and secondary endpoints (and assessment timepoints) against the timestamped registry record (`NCT` on ClinicalTrials.gov, `OSF`, `ISRCTN`, `PROSPERO`), tracked via `quantitativeresearch` MCP.
@@ -98,8 +116,16 @@ When auditing prediction models, multivariable regression models, or clinical ri
    - **Etiological Paradox / Purging:** Check whether authors deliberately excluded the primary real-world etiologies of the target pathology (e.g., excluding ischemic cardiomyopathy or severe valve disease from a heart failure cohort, or excluding prior MI/stents from a CAD biomarker study). Purging real-world etiologies creates an artificial "toy cohort" that inflates C-statistics/AUC while ensuring the model fails in clinical practice.
    - **MCAR Category Errors:** Detect whether authors misused Little's Missing Completely At Random (MCAR) test across patients who were deliberately excluded by protocol/discretion rather than unobserved item fields.
    - **Bayesian Penalty:** Apply `LR = 0.35` for severe spectrum truncation ($> 50\%$) or etiological purging.
-4. **Methodological Risk of Bias Grading:** Grade all 5 **Cochrane RoB 2** domains (for RCTs), 7 **ROBINS-I V2** domains (for observational studies), **PROBAST** (for prediction models), or **AMSTAR 2** domains (for systematic reviews), citing verbatim quotes from the text.
-5. **Tier 2 Bayesian Credibility Calculation:**
+4. **Gate 4.2: Population-Phenotype Cutoff & Construct Validity Sieve (`run_population_phenotype_cutoff_audit`):**
+   - **Phenotypic Cutoff Concordance:** Verify that diagnostic and anthropometric thresholds match the target population's established epidemiological guidelines.
+   - **Paradoxical Western Import:** Flag studies that purport to build an "ethnicity-tailored" or "Asian-specific" model but contradictorily import Western diagnostic thresholds (e.g., using Western $\text{BMI} > 30 \text{ kg/m}^2$ instead of WHO Asian / Singapore MOH $\text{BMI} \ge 27.5 \text{ kg/m}^2$), misclassifying high-risk individuals and severely deflating sensitivity.
+   - **Bayesian Penalty:** Apply `LR = 0.25` for paradoxical population-cutoff discordance.
+5. **Gate 4.3: Methods-to-Table Descriptive & Non-Parametric Sieve (`run_descriptive_methods_table_audit`):**
+   - **Boilerplate Text Discrepancy:** Detect contradictions between the Methods text (e.g. claiming "mean ± SD and Student's t-test") and published tables (presenting exclusively Medians and IQRs).
+   - **Inappropriate Parametric Testing on Skewed Variables:** Flag risk of running parametric $t$-tests or ANOVA on heavily skewed clinical markers (NT-proBNP, creatinine, ratios), or failing to report the actual non-parametric tests applied.
+   - **Bayesian Penalty:** Apply `LR = 0.40` for descriptive mismatch and unverified parametric testing.
+6. **Methodological Risk of Bias Grading:** Grade all 5 **Cochrane RoB 2** domains (for RCTs), 7 **ROBINS-I V2** domains (for observational studies), **PROBAST** (for prediction models), or **AMSTAR 2** domains (for systematic reviews), citing verbatim quotes from the text.
+7. **Tier 2 Bayesian Credibility Calculation:**
    - Start with the baseline Field Prior Probability (`P_prior = 0.50` for confirmatory RCT; `0.30` for exploratory clinical/biomedical/psychology study; `0.20` for observational epidemiology or discovery multi-omics).
    - Compute `Prior_Odds = P_prior / (1 - P_prior)`.
    - Multiply by all applicable Likelihood Ratios (`LR_i`):
@@ -112,7 +138,11 @@ When auditing prediction models, multivariable regression models, or clinical ri
      - Severe 95% CI Imprecision (too-wide CI crossing MCID / spanning appreciable benefit & harm, or failing GRADE OIS): `LR = 0.40`
      - Suspiciously narrow 95% CI (`SD_implied < 25%` of reference SD or SE-as-CI misreporting): `LR = 0.15`
      - High Specificity Mirage (FNR > 50% or LR- > 0.80 disguised by high specificity): `LR = 0.20`
+     - Inappropriate uncorrected Pearson chi-square on sparse cells violating Cochran's rule: `LR = 0.20`
+     - Paradoxical population-cutoff discordance (e.g. Western BMI > 30 on Asian cohort): `LR = 0.25`
      - Severe Spectrum Truncation (> 50% excluded or primary etiology purged): `LR = 0.35`
+     - Unverified logit linearity / outlier leverage on continuous skewed ratios (e.g. linear E/e'): `LR = 0.35`
+     - Methods-to-table descriptive mismatch + parametric testing on skewed variables: `LR = 0.40`
      - Unapplied Shrinkage / Inadequate Resampling ($B < 500$): `LR = 0.60`
      - Abstract-to-Text Reporting Drift / Primary Outcome Demotion Spin: `LR = 0.40`
      - Unreconciled sample size (`N`) shifts across tables: `LR = 0.30`
@@ -139,19 +169,23 @@ Always format the deliverable using these 5 sections:
 
 1. **Executive Integrity Verdict:** (`PASS`, `QUALIFIED PASS`, `SKEPTICAL CAUTION`, or `HARD REJECT - KILL-SWITCH TRIPPED`)
 2. **Gate 1 & Gate 2 Provenance & Paper-Mill Summary:** Retraction status, registry ID, and tortured-phrase/reagent screen.
-3. **Gate 3, Gate 3.5, Gate 3.6 & Gate 3.7 Universal Table, 95% CI & Diagnostic/Resampling Audit:**
+3. **Gate 3, Gate 3.5, Gate 3.6, Gate 3.7, Gate 3.8 & Gate 3.9 Universal Table, 95% CI & Diagnostic/Resampling Audit:**
    - Inline `statcheck`, `GRIM`/`DEBIT`, and **95% CI Symmetry/Width/Imprecision** results (with verbatim R stdout if executed via RStudio MCP or exact recalculated p-values).
    - Diagnostic 2x2 contingency matrix, False Negative Rate, Negative Likelihood Ratio, and High Specificity Mirage audit (`run_diagnostic_2x2_audit`).
    - Bootstrap iteration sufficiency ($B \ge 500$), sample size conflation, and deployed shrinkage verification (`run_bootstrap_resampling_audit`).
+   - Cochran's rule and sparse contingency table expected frequencies audit (`run_cochran_sparse_table_audit`).
+   - Continuous ratio logit linearity and outlier leverage audit (`run_logit_linearity_and_ratio_audit`).
    - Table 1 through Table N sample-size continuity, baseline balance, and macro-epidemiological population grounding.
    - Clinical scatterplot density (`SBP > 160`, etc.) AND Manhattan/volcano plot audit (`lambda_GC`, LD-tower chimney screen, FDR vs raw-p, and GWAS Catalog / Open Targets MCP grounding).
-4. **Gate 4 Outcome Switching, Methodological Risk of Bias & Spectrum Truncation Scorecard:**
+4. **Gate 4 Outcome Switching, Methodological Risk of Bias & Population Validity Scorecard:**
    - Registry alignment, abstract-to-text reporting drift, and domain-by-domain risk-of-bias table (Cochrane RoB 2 for RCTs, PROBAST for prediction models, ROBINS-I for observational cohorts) with verbatim quotes.
    - Spectrum truncation and etiological purging audit (`run_spectrum_truncation_audit`).
-5. **Tier 2 Bayesian Credibility Calculation:** Step-by-step table showing Prior Probability, each applied `LR_i` (including 95% CI imprecision/narrow-variance, High Specificity Mirage, unapplied shrinkage, and genomics plot multipliers), final Posterior Credibility Percentage, and GRADE certainty rating.
+   - Population-phenotype cutoff and construct validity audit (`run_population_phenotype_cutoff_audit`).
+   - Methods-to-table descriptive discrepancy and non-parametric audit (`run_descriptive_methods_table_audit`).
+5. **Tier 2 Bayesian Credibility Calculation:** Step-by-step table showing Prior Probability, each applied `LR_i` (including 95% CI imprecision/narrow-variance, High Specificity Mirage, unapplied shrinkage, Cochran violation, population cutoff discordance, logit linearity violation, descriptive mismatch, and genomics plot multipliers), final Posterior Credibility Percentage, and GRADE certainty rating.
 
 ## Supplementary Resources in This Skill
 
-- `references/audit_paper_r.md`: Complete R forensic script (`statcheck`, `scrutiny::grim_map`, `rsprite2`, `benford.analysis`, Carlisle baseline check, `run_chart_density_audit`, `run_ci_consistency_and_width_audit`, `run_manhattan_volcano_audit`, `run_diagnostic_2x2_audit`, `run_bootstrap_resampling_audit`, and `run_spectrum_truncation_audit`).
+- `references/audit_paper_r.md`: Complete R forensic script (`statcheck`, `scrutiny::grim_map`, `rsprite2`, `benford.analysis`, Carlisle baseline check, `run_chart_density_audit`, `run_ci_consistency_and_width_audit`, `run_manhattan_volcano_audit`, `run_diagnostic_2x2_audit`, `run_bootstrap_resampling_audit`, `run_spectrum_truncation_audit`, `run_cochran_sparse_table_audit`, `run_logit_linearity_and_ratio_audit`, `run_population_phenotype_cutoff_audit`, and `run_descriptive_methods_table_audit`).
 - `references/antigravity_kit.md`: Drop-in `AGENTS.md` Master Prompt for `gemini-3.8-flash` and `.agents/mcp_config.json` with all 10 MCP servers wired up.
 - `references/example_42802996_audit.md`: Reference audit packet demonstrating Gate 1-4 evaluation including 95% CI width/consistency and scatterplot density auditing.

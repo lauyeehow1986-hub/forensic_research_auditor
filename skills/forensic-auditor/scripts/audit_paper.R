@@ -734,3 +734,236 @@ run_spectrum_truncation_audit <- function(
     recommended_lr = rec_lr
   ))
 }
+
+# ------------------------------------------------------------------------------
+# 12. COCHRAN SPARSE TABLE & EXPECTED COUNT SIEVE (Gate 3.8)
+# ------------------------------------------------------------------------------
+run_cochran_sparse_table_audit <- function(
+  contingency_table,
+  reported_p = NULL,
+  significance_level = 0.05
+) {
+  if (is.vector(contingency_table) && length(contingency_table) == 4) {
+    m <- matrix(as.numeric(contingency_table), nrow = 2, byrow = TRUE)
+  } else if (is.data.frame(contingency_table) || is.matrix(contingency_table)) {
+    m <- as.matrix(contingency_table)
+  } else {
+    stop("contingency_table must be a 2x2 matrix, data.frame, or length-4 vector.")
+  }
+  
+  if (nrow(m) < 2 || ncol(m) < 2 || any(is.na(m)) || any(m < 0)) {
+    stop("contingency_table must contain valid non-negative counts.")
+  }
+  
+  row_totals <- rowSums(m)
+  col_totals <- colSums(m)
+  grand_total <- sum(m)
+  
+  if (grand_total == 0) {
+    stop("contingency_table grand total cannot be zero.")
+  }
+  
+  expected <- outer(row_totals, col_totals, "*") / grand_total
+  
+  total_cells <- length(m)
+  cells_under_5 <- sum(expected < 5)
+  cells_under_1 <- sum(expected < 1)
+  pct_under_5 <- (cells_under_5 / total_cells) * 100.0
+  
+  cochran_violated <- (cells_under_1 > 0) || (pct_under_5 > 20.0)
+  
+  chisq_raw <- suppressWarnings(tryCatch(chisq.test(m, correct = FALSE), error = function(e) NULL))
+  p_chisq_raw <- if (!is.null(chisq_raw)) chisq_raw$p.value else NA_real_
+  stat_chisq_raw <- if (!is.null(chisq_raw)) as.numeric(chisq_raw$statistic) else NA_real_
+  
+  chisq_yates <- suppressWarnings(tryCatch(chisq.test(m, correct = TRUE), error = function(e) NULL))
+  p_chisq_yates <- if (!is.null(chisq_yates)) chisq_yates$p.value else NA_real_
+  
+  fisher_res <- suppressWarnings(tryCatch(fisher.test(m), error = function(e) NULL))
+  p_fisher <- if (!is.null(fisher_res)) fisher_res$p.value else NA_real_
+  
+  uncorrected_matched <- FALSE
+  fisher_matched <- FALSE
+  yates_matched <- FALSE
+  
+  if (!is.null(reported_p) && !is.na(reported_p)) {
+    if (!is.na(p_chisq_raw) && abs(reported_p - p_chisq_raw) <= 0.005) {
+      uncorrected_matched <- TRUE
+    }
+    if (!is.na(p_fisher) && abs(reported_p - p_fisher) <= 0.005) {
+      fisher_matched <- TRUE
+    }
+    if (!is.na(p_chisq_yates) && abs(reported_p - p_chisq_yates) <= 0.005) {
+      yates_matched <- TRUE
+    }
+  }
+  
+  inappropriate_test_used <- cochran_violated && uncorrected_matched
+  
+  rec_lr <- if (inappropriate_test_used) {
+    0.20
+  } else if (cochran_violated && !fisher_matched) {
+    0.50
+  } else {
+    1.00
+  }
+  
+  return(list(
+    observed_table = m,
+    expected_table = round(expected, 4),
+    grand_total = grand_total,
+    cells_under_5 = cells_under_5,
+    cells_under_1 = cells_under_1,
+    pct_cells_under_5 = round(pct_under_5, 2),
+    cochran_violated = cochran_violated,
+    chisq_raw_stat = round(stat_chisq_raw, 4),
+    chisq_raw_p = round(p_chisq_raw, 6),
+    chisq_yates_p = round(p_chisq_yates, 6),
+    fisher_exact_p = round(p_fisher, 6),
+    reported_p = reported_p,
+    uncorrected_matched = uncorrected_matched,
+    fisher_matched = fisher_matched,
+    yates_matched = yates_matched,
+    inappropriate_test_used = inappropriate_test_used,
+    recommended_lr = rec_lr
+  ))
+}
+
+# ------------------------------------------------------------------------------
+# 13. LOGIT LINEARITY & CONTINUOUS RATIO SKEWNESS SIEVE (Gate 3.9)
+# ------------------------------------------------------------------------------
+run_logit_linearity_and_ratio_audit <- function(
+  variable_name,
+  is_ratio_or_skewed = TRUE,
+  modeled_as = c("linear_continuous", "log_transformed", "spline", "binned"),
+  reported_or = NULL,
+  reported_beta = NULL,
+  evaluates_nonlinearity = FALSE
+) {
+  modeled_as <- match.arg(modeled_as)
+  
+  linear_violation <- isTRUE(is_ratio_or_skewed) && 
+                      (modeled_as == "linear_continuous") && 
+                      !isTRUE(evaluates_nonlinearity)
+  
+  outlier_leverage_risk <- linear_violation
+  
+  suggested_transforms <- if (linear_violation) {
+    c("Restricted Cubic Splines (RCS with 3-4 knots)",
+      "Natural Log-Transformation ln(X)",
+      "Clinically Established Guideline Thresholds (e.g., ASE/EACVI cutoffs)")
+  } else {
+    character(0)
+  }
+  
+  rec_lr <- if (linear_violation) {
+    0.35
+  } else {
+    1.00
+  }
+  
+  return(list(
+    variable_name = variable_name,
+    is_ratio_or_skewed = isTRUE(is_ratio_or_skewed),
+    modeled_as = modeled_as,
+    evaluates_nonlinearity = isTRUE(evaluates_nonlinearity),
+    logit_linearity_violation_risk = linear_violation,
+    outlier_leverage_risk = outlier_leverage_risk,
+    reported_or = reported_or,
+    reported_beta = reported_beta,
+    suggested_transforms = suggested_transforms,
+    recommended_lr = rec_lr
+  ))
+}
+
+# ------------------------------------------------------------------------------
+# 14. POPULATION-PHENOTYPE CUTOFF & CONSTRUCT VALIDITY SIEVE (Gate 4.2)
+# ------------------------------------------------------------------------------
+run_population_phenotype_cutoff_audit <- function(
+  cohort_ethnicity = c("Asian", "South_Asian", "East_Asian", "Western", "African_Descent"),
+  parameter = c("BMI", "Waist_Circumference", "eGFR"),
+  claimed_cutoff = 30.0,
+  reference_standard = c("WHO_Asian", "Singapore_MOH", "WHO_International", "AHA_ACC", "ESC"),
+  study_claimed_tailored_population = TRUE
+) {
+  cohort_ethnicity <- match.arg(cohort_ethnicity)
+  parameter <- match.arg(parameter)
+  reference_standard <- match.arg(reference_standard)
+  
+  is_asian_cohort <- cohort_ethnicity %in% c("Asian", "South_Asian", "East_Asian")
+  
+  discordant_cutoff <- FALSE
+  expected_cutoff_range <- character(0)
+  construct_validity_failure <- FALSE
+  paradoxical_western_import <- FALSE
+  
+  if (is_asian_cohort && parameter == "BMI") {
+    expected_cutoff_range <- ">= 27.5 kg/m2 (WHO Asian / Singapore MOH) or >= 25.0 kg/m2 (East Asian)"
+    if (claimed_cutoff >= 30.0) {
+      discordant_cutoff <- TRUE
+      construct_validity_failure <- TRUE
+      if (isTRUE(study_claimed_tailored_population)) {
+        paradoxical_western_import <- TRUE
+      }
+    }
+  }
+  
+  rec_lr <- if (paradoxical_western_import) {
+    0.25
+  } else if (discordant_cutoff) {
+    0.50
+  } else {
+    1.00
+  }
+  
+  return(list(
+    cohort_ethnicity = cohort_ethnicity,
+    parameter = parameter,
+    claimed_cutoff = claimed_cutoff,
+    reference_standard = reference_standard,
+    study_claimed_tailored_population = isTRUE(study_claimed_tailored_population),
+    expected_reference_cutoff = expected_cutoff_range,
+    population_cutoff_discordant = discordant_cutoff,
+    construct_validity_failure = construct_validity_failure,
+    paradoxical_western_import = paradoxical_western_import,
+    recommended_lr = rec_lr
+  ))
+}
+
+# ------------------------------------------------------------------------------
+# 15. METHODS-TO-TABLE DESCRIPTIVE & NON-PARAMETRIC SIEVE (Gate 4.3)
+# ------------------------------------------------------------------------------
+run_descriptive_methods_table_audit <- function(
+  text_claims = c("mean_sd", "median_iqr", "both"),
+  table_presents = c("median_iqr", "mean_sd", "mixed"),
+  parametric_tests_claimed = c("t_test", "anova", "none"),
+  variables_skewed = TRUE
+) {
+  text_claims <- match.arg(text_claims)
+  table_presents <- match.arg(table_presents)
+  parametric_tests_claimed <- match.arg(parametric_tests_claimed)
+  
+  discrepancy <- (text_claims == "mean_sd" && table_presents == "median_iqr") ||
+                 (text_claims == "median_iqr" && table_presents == "mean_sd")
+                 
+  inappropriate_parametric_risk <- isTRUE(variables_skewed) && 
+                                   (parametric_tests_claimed %in% c("t_test", "anova"))
+                                   
+  rec_lr <- if (discrepancy && inappropriate_parametric_risk) {
+    0.40
+  } else if (discrepancy || inappropriate_parametric_risk) {
+    0.70
+  } else {
+    1.00
+  }
+  
+  return(list(
+    text_claims = text_claims,
+    table_presents = table_presents,
+    parametric_tests_claimed = parametric_tests_claimed,
+    variables_skewed = isTRUE(variables_skewed),
+    methods_table_discrepancy = discrepancy,
+    inappropriate_parametric_test_risk = inappropriate_parametric_risk,
+    recommended_lr = rec_lr
+  ))
+}

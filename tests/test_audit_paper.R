@@ -18,6 +18,16 @@ assert_true <- function(condition, test_name) {
   }
 }
 
+assert_false <- function(condition, test_name) {
+  test_count <<- test_count + 1
+  if (!isTRUE(condition)) {
+    cat(sprintf("[PASS] %s\n", test_name))
+  } else {
+    test_failures <<- test_failures + 1
+    cat(sprintf("[FAIL] %s\n", test_name))
+  }
+}
+
 assert_equal <- function(actual, expected, test_name, tol = 1e-5) {
   test_count <<- test_count + 1
   match <- if (is.numeric(actual) && is.numeric(expected)) {
@@ -253,6 +263,102 @@ assert_equal(st_inv$exclusion_rate, 1.0, "Spectrum caps exclusion rate at 1.0")
 # Zero screened
 st_zero <- run_spectrum_truncation_audit(n_screened = 0, n_excluded = 0)
 assert_equal(st_zero$n_analyzed, 0, "Spectrum handles zero screened cohort safely")
+
+
+cat("\n--- 12. COCHRAN SPARSE TABLE & EXPECTED COUNT SIEVE TESTS ---\n")
+# Jiang CABG case: 3/156 vs 3/110, reported p = 0.664 (uncorrected chi-square)
+cabg_mat <- matrix(c(3, 153, 3, 107), nrow = 2, byrow = TRUE)
+c_cabg <- run_cochran_sparse_table_audit(cabg_mat, reported_p = 0.664)
+assert_true(isTRUE(c_cabg$cochran_violated), "Cochran rule flags sparse CABG table")
+assert_true(isTRUE(c_cabg$uncorrected_matched), "Uncorrected chi-square matches reported p = 0.664")
+assert_true(isTRUE(c_cabg$inappropriate_test_used), "Inappropriate test used flagged on sparse table")
+assert_equal(c_cabg$recommended_lr, 0.20, "Uncorrected chi-square on sparse cells assigns LR = 0.20")
+
+# Vector input format
+c_vec <- run_cochran_sparse_table_audit(c(3, 153, 3, 107), reported_p = 0.664)
+assert_true(isTRUE(c_vec$cochran_violated), "Cochran handles vector input format")
+
+# Correct Fisher test usage: reported p = 0.694
+c_fisher <- run_cochran_sparse_table_audit(cabg_mat, reported_p = 0.694)
+assert_true(isTRUE(c_fisher$fisher_matched), "Fisher matched reported p = 0.694")
+assert_false(isTRUE(c_fisher$inappropriate_test_used), "Fisher usage does not trigger inappropriate test")
+assert_equal(c_fisher$recommended_lr, 1.00, "Appropriate Fisher usage assigns LR = 1.00")
+
+# Large count table (non-sparse)
+c_clean <- run_cochran_sparse_table_audit(matrix(c(50, 106, 65, 45), nrow = 2))
+assert_false(isTRUE(c_clean$cochran_violated), "Large contingency table passes Cochran rule")
+assert_equal(c_clean$recommended_lr, 1.00, "Clean table assigns LR = 1.00")
+
+
+cat("\n--- 13. LOGIT LINEARITY & RATIO SKEWNESS SIEVE TESTS ---\n")
+# E/e' ratio entered as linear continuous without nonlinearity check
+l_ee <- run_logit_linearity_and_ratio_audit(
+  variable_name = "E/e' ratio",
+  is_ratio_or_skewed = TRUE,
+  modeled_as = "linear_continuous",
+  evaluates_nonlinearity = FALSE
+)
+assert_true(isTRUE(l_ee$logit_linearity_violation_risk), "Flags untransformed linear continuous ratio")
+assert_true(isTRUE(l_ee$outlier_leverage_risk), "Flags outlier leverage vulnerability")
+assert_equal(l_ee$recommended_lr, 0.35, "Linear ratio violation assigns LR = 0.35")
+
+# E/e' modeled using spline or log transform
+l_spline <- run_logit_linearity_and_ratio_audit(
+  variable_name = "E/e' ratio",
+  is_ratio_or_skewed = TRUE,
+  modeled_as = "spline",
+  evaluates_nonlinearity = TRUE
+)
+assert_false(isTRUE(l_spline$logit_linearity_violation_risk), "Spline modeling passes logit linearity audit")
+assert_equal(l_spline$recommended_lr, 1.00, "Spline modeling assigns LR = 1.00")
+
+
+cat("\n--- 14. POPULATION-PHENOTYPE CUTOFF SIEVE TESTS ---\n")
+# Asian cohort claiming tailored score but importing Western BMI > 30
+p_asian_bmi <- run_population_phenotype_cutoff_audit(
+  cohort_ethnicity = "Asian",
+  parameter = "BMI",
+  claimed_cutoff = 30.0,
+  reference_standard = "WHO_Asian",
+  study_claimed_tailored_population = TRUE
+)
+assert_true(isTRUE(p_asian_bmi$population_cutoff_discordant), "Flags Western BMI cutoff on Asian cohort")
+assert_true(isTRUE(p_asian_bmi$construct_validity_failure), "Flags construct validity failure")
+assert_true(isTRUE(p_asian_bmi$paradoxical_western_import), "Flags paradoxical Western cutoff import")
+assert_equal(p_asian_bmi$recommended_lr, 0.25, "Paradoxical Western import assigns LR = 0.25")
+
+# Asian cohort properly using Asian cutoff (27.5)
+p_clean <- run_population_phenotype_cutoff_audit(
+  cohort_ethnicity = "Asian",
+  parameter = "BMI",
+  claimed_cutoff = 27.5,
+  reference_standard = "WHO_Asian"
+)
+assert_false(isTRUE(p_clean$population_cutoff_discordant), "Concordant Asian cutoff passes audit")
+assert_equal(p_clean$recommended_lr, 1.00, "Concordant cutoff assigns LR = 1.00")
+
+
+cat("\n--- 15. METHODS-TO-TABLE DESCRIPTIVE SIEVE TESTS ---\n")
+# Methods claim mean_sd & t_test, but Table 1 presents median_iqr with skewed variables
+d_mismatch <- run_descriptive_methods_table_audit(
+  text_claims = "mean_sd",
+  table_presents = "median_iqr",
+  parametric_tests_claimed = "t_test",
+  variables_skewed = TRUE
+)
+assert_true(isTRUE(d_mismatch$methods_table_discrepancy), "Flags text mean_sd vs table median_iqr mismatch")
+assert_true(isTRUE(d_mismatch$inappropriate_parametric_test_risk), "Flags parametric testing risk on skewed data")
+assert_equal(d_mismatch$recommended_lr, 0.40, "Descriptive mismatch & parametric risk assigns LR = 0.40")
+
+# Clean concordant reporting
+d_clean <- run_descriptive_methods_table_audit(
+  text_claims = "median_iqr",
+  table_presents = "median_iqr",
+  parametric_tests_claimed = "none",
+  variables_skewed = TRUE
+)
+assert_false(isTRUE(d_clean$methods_table_discrepancy), "Concordant reporting passes audit")
+assert_equal(d_clean$recommended_lr, 1.00, "Concordant reporting assigns LR = 1.00")
 
 
 cat("\n======================================================\n")

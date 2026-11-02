@@ -39,6 +39,20 @@ Never rely on LLM mental math. Route each verification step to its dedicated MCP
      * Flag etiological paradox when the primary real-world causes of the target disease are purged (`LR = 0.35`).
      * Flag category errors (e.g. misusing Little's MCAR across deliberately excluded protocol subjects).
    - Check Abstract-to-Text reporting drift and primary outcome demotion spin (`LR = 0.40`).
+8. **Gate 3.8 (Cochran Sparse Table & Expected Count Sieve):**
+   - Execute `run_cochran_sparse_table_audit(contingency_table, reported_p)`:
+     * Compute expected cell frequencies $E_{ij} = (R_i C_j) / N$.
+     * Flag Cochran's rule violation if any cell $< 1$ or $> 20\%$ of cells $< 5$.
+     * Flag inappropriate uncorrected Pearson $\chi^2$ testing on sparse cells where Fisher's exact test is required (`LR = 0.20`).
+9. **Gate 3.9 (Logit Linearity & Continuous Ratio Skewness Sieve):**
+   - Execute `run_logit_linearity_and_ratio_audit(variable_name, is_ratio_or_skewed, modeled_as, evaluates_nonlinearity)`:
+     * Audit strictly positive, heavy-tailed biological ratios ($E/e'$, albumin-to-creatinine, NT-proBNP).
+     * Flag linearity-on-the-logit violations, outlier leverage, and absence of restricted cubic splines (RCS), log-transformation, or clinical thresholding (`LR = 0.35`).
+10. **Gate 4.2 & Gate 4.3 (Population Cutoff Discordance & Descriptive Methods Mismatch):**
+    - Execute `run_population_phenotype_cutoff_audit(cohort_ethnicity, parameter, claimed_cutoff, reference_standard)`:
+      * Flag paradoxical Western cutoff imports (e.g., Western $\text{BMI} > 30 \text{ kg/m}^2$ applied to Asian cohorts instead of WHO Asian $\ge 27.5 \text{ kg/m}^2$, causing false non-obese misclassification and sensitivity collapse; `LR = 0.25`).
+    - Execute `run_descriptive_methods_table_audit(text_claims, table_presents, parametric_tests_claimed, variables_skewed)`:
+      * Flag boilerplate text contradictions (e.g., text claiming "mean ± SD and Student's t-test" while tables present exclusively Medians and IQRs, with risk of invalid parametric testing on skewed variables; `LR = 0.40`).
 
 ## 3. Tier 2: Bayesian Credibility Multipliers (`LR_i`)
 - Pre-registered exact primary endpoint match: `LR = 2.50`
@@ -50,7 +64,11 @@ Never rely on LLM mental math. Route each verification step to its dedicated MCP
 - Severe 95% CI Imprecision (too-wide CI crossing MCID / spanning benefit & harm / failing GRADE OIS): `LR = 0.40`
 - Implausibly narrow 95% CI (`SD_implied < 25%` of reference SD / SE-as-CI misreporting): `LR = 0.15`
 - High Specificity Mirage (FNR > 50% or LR- > 0.80 disguised by high specificity): `LR = 0.20`
+- Inappropriate uncorrected Pearson chi-square on sparse cells violating Cochran's rule: `LR = 0.20`
+- Paradoxical population-cutoff discordance (e.g., Western BMI > 30 on Asian cohort): `LR = 0.25`
 - Severe Spectrum Truncation (> 50% excluded or primary etiology purged): `LR = 0.35`
+- Unverified logit linearity / outlier leverage on continuous skewed ratios (e.g., linear E/e'): `LR = 0.35`
+- Methods-to-table descriptive mismatch + parametric testing on skewed variables: `LR = 0.40`
 - Unapplied Shrinkage / Inadequate Resampling ($B < 500$): `LR = 0.60`
 - Abstract-to-Text Reporting Drift / Primary Outcome Demotion Spin: `LR = 0.40`
 - Unreconciled sample size shifts (`N` mismatch across tables): `LR = 0.30`

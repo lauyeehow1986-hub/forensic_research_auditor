@@ -87,11 +87,23 @@ flowchart TD
    - Audits iteration sufficiency ($B < 500$ flagged as unstable).
    - Exposes sample size vs. iteration conflation (e.g. $B = 0.5 \times N$).
    - Flags unapplied heuristic or bootstrap shrinkage where deployed formulas/calculators use raw unpenalized betas ($LR = 0.60$).
-7. **Gate 4 & Gate 4.1 (Pre-Registration, Spectrum Truncation & Methodological Bias):**
-   - Exposes Abstract-to-Text reporting drift and primary outcome demotion spin ($LR = 0.40$).
-   - Audits cohort flow for severe spectrum truncation ($> 50\%$ excluded) and etiological purging ($LR = 0.35$).
-   - Grades Cochrane RoB 2, PROBAST, or ROBINS-I domains supported with verbatim quotes.
-   - Calculates the Bayesian Posterior Credibility Score $P(\text{Credible})$.
+8. **Gate 3.8 (Cochran Sparse Table & Expected Count Sieve):**
+   - Reconstructs $2 \times 2$ expected cell counts $E_{ij} = (R_i C_j) / N$.
+   - Flags Cochran's rule violation when any cell $< 1$ or $> 20\%$ of cells $< 5$.
+   - Detects inappropriate uncorrected Pearson $\chi^2$ testing on sparse cells where Fisher's exact test was required ($LR = 0.20$).
+9. **Gate 3.9 (Logit Linearity & Continuous Ratio Skewness Sieve):**
+   - Audits continuous hemodynamic and biomarker ratios ($E/e'$, ACR, NT-proBNP).
+   - Flags logit linearity violations and outlier leverage when modeled as untransformed linear terms without evaluating splines or log-transforms ($LR = 0.35$).
+10. **Gate 4.2 (Population-Phenotype Cutoff & Construct Validity Sieve):**
+    - Audits clinical thresholds against target population guidelines.
+    - Flags paradoxical Western cutoff imports (e.g. Western $\text{BMI} > 30 \text{ kg/m}^2$ applied to Asian cohorts instead of WHO Asian $\ge 27.5 \text{ kg/m}^2$; $LR = 0.25$).
+11. **Gate 4.3 (Methods-to-Table Descriptive & Non-Parametric Discrepancy Sieve):**
+    - Flags boilerplate copy-paste contradictions (e.g. methods claiming "mean ± SD and Student's t-test" while tables report exclusively Medians and IQRs, with risk of invalid parametric testing on skewed distributions; $LR = 0.40$).
+12. **Gate 4 & Gate 4.1 (Pre-Registration, Spectrum Truncation & Methodological Bias):**
+    - Exposes Abstract-to-Text reporting drift and primary outcome demotion spin ($LR = 0.40$).
+    - Audits cohort flow for severe spectrum truncation ($> 50\%$ excluded) and etiological purging ($LR = 0.35$).
+    - Grades Cochrane RoB 2, PROBAST, or ROBINS-I domains supported with verbatim quotes.
+    - Calculates the Bayesian Posterior Credibility Score $P(\text{Credible})$.
 
 ---
 
