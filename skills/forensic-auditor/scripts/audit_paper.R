@@ -36,8 +36,8 @@ run_statcheck_audit <- function(paper_text_or_pdf_path, is_pdf = FALSE) {
   }
   
   text <- paste(paper_text_or_pdf_path, collapse = " ")
-  # Pattern matches t, F, r, chi2, z
-  pattern <- "(?:([tFFrrzZ]|chi2?|\u03c72?|X2)\\s*\\(?([0-9\\.,\\s]+)?\\)?\\s*=\\s*(-?[0-9\\.]+)\\s*,\\s*p\\s*([<>=])\\s*([0-9\\.]+))"
+  # Pattern matches t, F, r, chi2, z with comma or semicolon separator, case-insensitive p
+  pattern <- "(?:([tFFrrzZ]|chi2?|\u03c72?|X2)\\s*\\(?([0-9\\.,\\s]+)?\\)?\\s*=\\s*(-?[0-9\\.]+)\\s*[,;]?\\s*[pP]\\s*([<>=])\\s*([0-9\\.]+))"
   matches <- gregexpr(pattern, text, perl = TRUE, ignore.case = TRUE)[[1]]
   
   if (length(matches) == 1 && matches[1] == -1) {
@@ -51,7 +51,6 @@ run_statcheck_audit <- function(paper_text_or_pdf_path, is_pdf = FALSE) {
   parsed_list <- list()
   for (i in seq_along(raw_strings)) {
     raw <- raw_strings[i]
-    # Simple parsing of test type, df, statistic, and p-value
     clean_raw <- gsub("\\s+", "", raw)
     stat_type <- toupper(sub("^([A-Z0-9\u03c7]+).*", "\\1", clean_raw, perl = TRUE))
     
@@ -61,11 +60,14 @@ run_statcheck_audit <- function(paper_text_or_pdf_path, is_pdf = FALSE) {
     dfs <- dfs[!is.na(dfs)]
     
     # Extract test stat value
-    stat_val <- as.numeric(sub(".*=(-?[0-9\\.]+),.*", "\\1", clean_raw))
+    stat_val <- as.numeric(sub(".*=(-?[0-9\\.]+)[,;].*", "\\1", clean_raw))
+    if (is.na(stat_val)) {
+      stat_val <- as.numeric(sub(".*=(-?[0-9\\.]+)[pP].*", "\\1", clean_raw, ignore.case = TRUE))
+    }
     # Extract operator and reported p
-    op <- sub(".*,p([<>=]).*", "\\1", clean_raw)
-    rep_p_str <- sub(".*,p[<>=]([0-9\\.]+).*", "\\1", clean_raw)
-    rep_p_str <- sub("[^0-9]+$", "", rep_p_str)
+    op <- sub(".*[pP]([<>=]).*", "\\1", clean_raw, ignore.case = TRUE)
+    rep_p_str <- sub(".*[pP][<>=]([0-9\\.]+).*", "\\1", clean_raw, ignore.case = TRUE)
+    rep_p_str <- sub("[^0-9\\.]+$", "", rep_p_str)
     rep_p <- as.numeric(rep_p_str)
     
     comp_p <- NA_real_
@@ -134,6 +136,11 @@ run_all_tables_audit <- function(named_tables_list) {
       x_str <- as.character(df[i, x_col])
       dec_places <- if (grepl("\\.", x_str)) nchar(strsplit(x_str, "\\.")[[1]][2]) else 0
       
+      if (is.na(x_val) || is.na(n_val) || n_val <= 0) {
+        cons_vec[i] <- FALSE
+        next
+      }
+      
       # Step size is 1 / n
       # Test if there exists an integer sum S such that S / n rounds to x_val
       possible_sums <- round(x_val * n_val) + (-3:3)
@@ -176,6 +183,20 @@ run_sprite_check <- function(mean_val, sd_val, n_obs, min_scale = 1, max_scale =
   }
   
   # --- Base R Analytical SPRITE Variance Bounds Fallback ---
+  if (is.na(mean_val) || is.na(sd_val) || is.na(n_obs)) {
+    return(list(
+      mean = mean_val,
+      sd = sd_val,
+      n = n_obs,
+      min_scale = min_scale,
+      max_scale = max_scale,
+      observed_variance = NA_real_,
+      max_theoretical_variance = NA_real_,
+      variance_bounded = FALSE,
+      status = "INVALID: Missing mean, sd, or n parameter"
+    ))
+  }
+  
   obs_var <- sd_val^2
   # Maximum theoretical variance on [min_scale, max_scale] given mean
   max_var <- (max_scale - mean_val) * (mean_val - min_scale)
@@ -287,7 +308,6 @@ run_comprehensive_benford_audit <- function(
   }
   
   # --- Base R First-Digit Benford Fallback ---
-  # Extract leading non-zero digit
   num_strs <- sprintf("%.10e", abs(nums))
   first_digits <- as.numeric(substr(num_strs, 1, 1))
   first_digits <- first_digits[first_digits >= 1 & first_digits <= 9]
@@ -299,7 +319,7 @@ run_comprehensive_benford_audit <- function(
   expected_counts <- benford_props * n_total
   
   # Mean Absolute Deviation (MAD)
-  mad <- mean(abs(observed_props - benford_props))
+  mad <- as.numeric(mean(abs(observed_props - benford_props)))
   mad_conformity <- if (mad <= 0.006) {
     "Close conformity"
   } else if (mad <= 0.012) {
@@ -311,7 +331,7 @@ run_comprehensive_benford_audit <- function(
   }
   
   # Chi-square goodness-of-fit
-  chisq_res <- stats::chisq.test(x = observed_counts, p = benford_props)
+  chisq_res <- suppressWarnings(stats::chisq.test(x = observed_counts, p = benford_props))
   
   # Suspect digits: |Obs - Exp| > 2 * SE
   se_digits <- sqrt(benford_props * (1 - benford_props) / n_total)
@@ -334,6 +354,16 @@ run_comprehensive_benford_audit <- function(
 # ------------------------------------------------------------------------------
 run_chart_density_audit <- function(x_values, y_values, claimed_threshold_x) {
   total_points <- length(x_values)
+  if (total_points == 0) {
+    return(list(
+      total_observations = 0,
+      points_in_claimed_extreme_zone = 0,
+      percentage_in_extreme_zone = 0.0,
+      unsupported_extrapolation_risk = FALSE,
+      recommended_lr = 1.00
+    ))
+  }
+  
   high_severity_mask <- x_values >= claimed_threshold_x
   count_high_sev <- sum(high_severity_mask, na.rm = TRUE)
   pct_high_sev <- (count_high_sev / total_points) * 100
@@ -356,6 +386,40 @@ run_ci_consistency_and_width_audit <- function(
   is_ratio = FALSE, mcid_threshold = NA, reference_sd = NA, total_events = NA,
   symmetry_tol = 0.05
 ) {
+  # Inverted bound correction
+  if (!is.na(ci_lower) && !is.na(ci_upper) && ci_lower > ci_upper) {
+    tmp <- ci_lower
+    ci_lower <- ci_upper
+    ci_upper <- tmp
+  }
+
+  impossible_ratio_bounds <- FALSE
+  if (is_ratio) {
+    if (is.na(point_est) || is.na(ci_lower) || is.na(ci_upper) || 
+        point_est <= 0 || ci_lower <= 0 || ci_upper <= 0) {
+      impossible_ratio_bounds <- TRUE
+    }
+  }
+
+  if (impossible_ratio_bounds) {
+    return(list(
+      point_estimate = point_est,
+      ci_95 = c(ci_lower, ci_upper),
+      is_symmetric = FALSE,
+      asymmetry_error = NA_real_,
+      implied_se = NA_real_,
+      implied_z = NA_real_,
+      recalculated_p = NA_real_,
+      reported_p = reported_p,
+      decision_error_kill_switch = TRUE,
+      implied_sd = NA_real_,
+      too_narrow_ci_variance_compression = FALSE,
+      too_wide_ci_grade_imprecision = FALSE,
+      recommended_lr = 0.20,
+      status = "FAIL: Non-positive estimate or CI bound reported for ratio metric"
+    ))
+  }
+
   if (is_ratio) {
     est_trans <- log(point_est)
     ll_trans  <- log(ci_lower)
@@ -370,11 +434,11 @@ run_ci_consistency_and_width_audit <- function(
   
   midpoint <- (ll_trans + ul_trans) / 2.0
   asymmetry_error <- abs(est_trans - midpoint)
-  is_symmetric <- asymmetry_error <= symmetry_tol
+  is_symmetric <- !is.na(asymmetry_error) && asymmetry_error <= symmetry_tol
   
   implied_se <- (ul_trans - ll_trans) / (2 * stats::qnorm(0.975))
-  implied_z  <- abs(est_trans - null_val) / implied_se
-  recalculated_p <- 2 * stats::pnorm(-abs(implied_z))
+  implied_z  <- if (!is.na(implied_se) && implied_se > 0) abs(est_trans - null_val) / implied_se else Inf
+  recalculated_p <- if (is.finite(implied_z)) 2 * stats::pnorm(-abs(implied_z)) else 0.0
   
   crosses_null <- (ll_trans <= null_val && ul_trans >= null_val)
   decision_error <- FALSE
@@ -384,7 +448,7 @@ run_ci_consistency_and_width_audit <- function(
   }
   
   # Too-Narrow CI Check (Variance Compression / SE-as-SD Misreporting)
-  implied_sd <- if (!is.na(n_total) && !is_ratio) implied_se * sqrt(n_total) else NA
+  implied_sd <- if (!is.na(n_total) && !is_ratio && !is.na(implied_se)) implied_se * sqrt(n_total) else NA
   too_narrow_ci_flag <- FALSE
   if (!is.na(implied_sd) && !is.na(reference_sd) && reference_sd > 0) {
     too_narrow_ci_flag <- (implied_sd / reference_sd) < 0.25
@@ -405,9 +469,13 @@ run_ci_consistency_and_width_audit <- function(
   too_wide_ci_imprecision <- spans_benefit_and_harm || (under_ois && !is.na(mcid_threshold) && (abs(ci_lower) >= abs(mcid_threshold) || abs(ci_upper) >= abs(mcid_threshold)))
   
   lr_ci <- 1.00
-  if (too_narrow_ci_flag) lr_ci <- lr_ci * 0.15
-  if (too_wide_ci_imprecision) lr_ci <- lr_ci * 0.40
-  if (!is_symmetric && !decision_error) lr_ci <- lr_ci * 0.20
+  if (isTRUE(decision_error)) {
+    lr_ci <- 0.05
+  } else {
+    if (isFALSE(is_symmetric)) lr_ci <- lr_ci * 0.20
+    if (too_narrow_ci_flag) lr_ci <- lr_ci * 0.15
+    if (too_wide_ci_imprecision) lr_ci <- lr_ci * 0.40
+  }
   
   return(list(
     point_estimate = point_est,
@@ -488,10 +556,10 @@ run_diagnostic_2x2_audit <- function(
   spec <- if (specificity > 1.0) specificity / 100.0 else specificity
   
   # Reconstruct 2x2 contingency counts
-  tp <- round(sens * n_cases)
-  fn <- n_cases - tp
-  tn <- round(spec * n_controls)
-  fp <- n_controls - tn
+  tp <- if (n_cases > 0) round(sens * n_cases) else 0
+  fn <- if (n_cases > 0) n_cases - tp else 0
+  tn <- if (n_controls > 0) round(spec * n_controls) else 0
+  fp <- if (n_controls > 0) n_controls - tn else 0
   total_n <- n_cases + n_controls
   
   # Error rates & Diagnostic Likelihood Ratios
@@ -502,30 +570,36 @@ run_diagnostic_2x2_audit <- function(
   dor <- if (fp * fn > 0) (tp * tn) / (fp * fn) else NA_real_
   
   # Reconstructed PPV and NPV (using sample prevalence or supplied population prevalence)
-  prev_used <- if (!is.null(prevalence)) {
-    if (prevalence > 1.0) prevalence / 100.0 else prevalence
+  if (total_n == 0 && is.null(prevalence)) {
+    prev_used <- NA_real_
+    calc_ppv <- NA_real_
+    calc_npv <- NA_real_
   } else {
-    n_cases / total_n
+    prev_used <- if (!is.null(prevalence)) {
+      if (prevalence > 1.0) prevalence / 100.0 else prevalence
+    } else {
+      if (total_n > 0) n_cases / total_n else 0.5
+    }
+    denom_ppv <- (sens * prev_used) + (fpr * (1 - prev_used))
+    calc_ppv <- if (!is.na(denom_ppv) && denom_ppv > 0) (sens * prev_used) / denom_ppv else NA_real_
+    
+    denom_npv <- (fnr * prev_used) + (spec * (1 - prev_used))
+    calc_npv <- if (!is.na(denom_npv) && denom_npv > 0) (spec * (1 - prev_used)) / denom_npv else NA_real_
   }
   
-  # Bayesian / reconstructed predictive values
-  denom_ppv <- (sens * prev_used) + (fpr * (1 - prev_used))
-  calc_ppv <- if (denom_ppv > 0) (sens * prev_used) / denom_ppv else NA_real_
-  
-  denom_npv <- (fnr * prev_used) + (spec * (1 - prev_used))
-  calc_npv <- if (denom_npv > 0) (spec * (1 - prev_used)) / denom_npv else NA_real_
-  
-  # High Specificity Mirage: FNR > 50% or LR- > 0.80 despite touted high specificity
-  high_spec_mirage <- (fnr > 0.50) || (!is.na(lr_neg) && lr_neg > 0.80)
+  # High Specificity Mirage: FNR > 50% or LR- > 0.80 despite touting high specificity
+  high_spec_mirage <- (spec >= 0.70 && ((fnr > 0.50) || (!is.na(lr_neg) && is.finite(lr_neg) && lr_neg > 0.80))) ||
+                      ((fnr > 0.50) || (!is.na(lr_neg) && is.finite(lr_neg) && lr_neg > 0.80))
+  if (spec == 0) high_spec_mirage <- FALSE
   
   # PPV/NPV discrepancy audit
   ppv_discrepancy <- FALSE
-  if (!is.na(reported_ppv)) {
+  if (!is.na(reported_ppv) && !is.na(calc_ppv)) {
     norm_rep_ppv <- if (reported_ppv > 1.0) reported_ppv / 100.0 else reported_ppv
     ppv_discrepancy <- abs(calc_ppv - norm_rep_ppv) > 0.05
   }
   npv_discrepancy <- FALSE
-  if (!is.na(reported_npv)) {
+  if (!is.na(reported_npv) && !is.na(calc_npv)) {
     norm_rep_npv <- if (reported_npv > 1.0) reported_npv / 100.0 else reported_npv
     npv_discrepancy <- abs(calc_npv - norm_rep_npv) > 0.05
   }
@@ -545,16 +619,16 @@ run_diagnostic_2x2_audit <- function(
   return(list(
     contingency_table = tbl_matrix,
     total_n = total_n,
-    prevalence_applied = round(prev_used, 4),
+    prevalence_applied = if (!is.na(prev_used)) round(prev_used, 4) else NA_real_,
     sensitivity = round(sens, 4),
     specificity = round(spec, 4),
     false_positive_rate = round(fpr, 4),
     false_negative_rate = round(fnr, 4),
-    positive_likelihood_ratio = round(lr_pos, 4),
-    negative_likelihood_ratio = round(lr_neg, 4),
+    positive_likelihood_ratio = if (is.finite(lr_pos)) round(lr_pos, 4) else lr_pos,
+    negative_likelihood_ratio = if (is.finite(lr_neg)) round(lr_neg, 4) else lr_neg,
     diagnostic_odds_ratio = round(dor, 4),
-    reconstructed_ppv = round(calc_ppv, 4),
-    reconstructed_npv = round(calc_npv, 4),
+    reconstructed_ppv = if (!is.na(calc_ppv)) round(calc_ppv, 4) else NA_real_,
+    reconstructed_npv = if (!is.na(calc_npv)) round(calc_npv, 4) else NA_real_,
     reported_ppv = reported_ppv,
     reported_npv = reported_npv,
     ppv_discrepancy = ppv_discrepancy,
@@ -573,12 +647,16 @@ run_bootstrap_resampling_audit <- function(
   claimed_shrinkage = NA, 
   deployed_betas_match_raw = FALSE
 ) {
+  if (is.null(B_iterations) || length(B_iterations) == 0) {
+    B_iterations <- NA_real_
+  }
+  
   # 1. Iteration Sufficiency: B < 500 is under-resampled and unstable
-  iteration_insufficient <- (B_iterations < 500)
+  iteration_insufficient <- is.na(B_iterations) || (B_iterations < 500)
   
   # 2. Conflation of Sample Size and Resampling Iterations
   sample_conflation <- FALSE
-  if (!is.na(n_sample)) {
+  if (!is.na(n_sample) && !is.na(B_iterations) && n_sample > 0) {
     # Authors conflating cross-validation percentage with bootstrap repetitions (e.g. B = 0.5 * N)
     ratio <- B_iterations / n_sample
     if ((ratio >= 0.4 && ratio <= 0.6) || (B_iterations <= n_sample && B_iterations < 100)) {
@@ -590,7 +668,7 @@ run_bootstrap_resampling_audit <- function(
   # If shrinkage factor or penalized model was claimed, but deployed formula/tool used raw betas
   unapplied_shrinkage <- isTRUE(deployed_betas_match_raw)
   
-  penalty_triggered <- iteration_insufficient || sample_conflation || unapplied_shrinkage
+  penalty_triggered <- isTRUE(iteration_insufficient) || isTRUE(sample_conflation) || isTRUE(unapplied_shrinkage)
   rec_lr <- ifelse(penalty_triggered, 0.60, 1.00)
   
   return(list(
@@ -614,13 +692,23 @@ run_spectrum_truncation_audit <- function(
   excluded_primary_etiologies = character(0), 
   mcar_misused = FALSE
 ) {
-  n_analyzed <- n_screened - n_excluded
-  exclusion_rate <- if (n_screened > 0) n_excluded / n_screened else 0.0
-  pct_excluded <- exclusion_rate * 100.0
+  if (is.null(n_screened) || is.na(n_screened) || n_screened <= 0) {
+    n_screened <- 0
+    n_excluded <- 0
+    n_analyzed <- 0
+    exclusion_rate <- 0.0
+    pct_excluded <- 0.0
+  } else {
+    safe_excluded <- max(0, min(n_screened, n_excluded))
+    n_analyzed <- n_screened - safe_excluded
+    exclusion_rate <- safe_excluded / n_screened
+    pct_excluded <- exclusion_rate * 100.0
+  }
   
   moderate_truncation <- (exclusion_rate > 0.30)
   severe_truncation <- (exclusion_rate > 0.50)
-  etiological_paradox <- length(excluded_primary_etiologies) > 0
+  clean_etiologies <- excluded_primary_etiologies[!is.na(excluded_primary_etiologies) & nzchar(trimws(excluded_primary_etiologies))]
+  etiological_paradox <- length(clean_etiologies) > 0
   
   penalty_triggered <- severe_truncation || etiological_paradox
   
@@ -641,7 +729,7 @@ run_spectrum_truncation_audit <- function(
     moderate_truncation_warning = moderate_truncation,
     severe_truncation_risk = severe_truncation,
     etiological_paradox_risk = etiological_paradox,
-    excluded_primary_etiologies = excluded_primary_etiologies,
+    excluded_primary_etiologies = clean_etiologies,
     mcar_misuse_flag = isTRUE(mcar_misused),
     recommended_lr = rec_lr
   ))
