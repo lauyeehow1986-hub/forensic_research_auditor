@@ -9,6 +9,7 @@ audit_reports/*.md
 *.html
 !/docs/*.html
 *.txt
+!requirements.txt
 scratch*
 fetch_details.py
 execute_*.R
