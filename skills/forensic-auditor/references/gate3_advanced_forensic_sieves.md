@@ -269,3 +269,20 @@ In a manuscript with 4 dense tables ($\approx 180$ numerical cells), even a 99.8
    - Any other anomaly requires a cluster of $\ge 2$ distinct flags across different tables/metrics to trigger an automated binary anomaly flag.
    - Isolated single-cell anomalies are routed to Tier 2 Bayesian penalties ($LR = 0.20$ to $0.40$), preserving clean control specificity above 78%–80%.
 
+---
+
+## 7. Gate 3.5 Tier 3: Inter-Paper Retraction Fingerprint Index (The Lean ImageTwin)
+
+To intercept cross-manuscript figure reuse (e.g. paper-mill syndicates that recycle panels across journals and years), the auditor integrates an in-process, scalable vector & perceptual hash index backed by DuckDB:
+
+1. **3-Stage Sieve Architecture:**
+   - **Stage 1 (Perceptual Hashes):** 64-bit DCT `pHash` and horizontal difference gradient `dHash`. Evaluates bitwise Hamming distance in DuckDB (`bit_count(xor(phash_int, ?::UBIGINT)) <= 16`).
+   - **Stage 2 (Dense Feature Vectors):** 256-dimensional L2-normalized spatial pyramid gradient + DCT power spectrum embedding ranked via SIMD cosine similarity (`list_cosine_similarity >= 0.65`).
+   - **Stage 3 (Geometric Homography Verification):** SIFT keypoint extraction + Lowe's ratio test ($0.75$) + RANSAC affine homography estimation ($H$). Enforces strict geometric non-degeneracy ($0.15 \le |\det(H)| \le 6.0$, $\ge 10$ unique inliers, $\ge 12$ total inliers) to achieve 0% false alarms.
+2. **Dynamic & Idempotent Scalability:**
+   - Database schema uses `INSERT OR REPLACE` to allow continuous future expansion beyond 5,000 retracted studies (scaling to 10k, 20k, 50k+).
+   - Ingests both full composite figures and segmented constituent sub-panels (Panel A, B, C, D).
+3. **Forensic Comparative Visualization:**
+   - Automatically generates side-by-side comparative overlays displaying the audited query figure and the matching retracted donor figure, annotated with correspondence lines connecting matching keypoint pairs and coral-red retraction metadata banners.
+
+

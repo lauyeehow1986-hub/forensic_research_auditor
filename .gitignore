@@ -15,6 +15,9 @@ execute_*.R
 *.pdf
 *.docx
 extracted_supp/
+extracted_supp_media/
+*.duckdb
+*.duckdb.wal
 
 # R environment files
 .Rhistory

@@ -171,7 +171,21 @@ Detects within-manuscript figure tampering with zero external database requireme
    - Flags geometric duplications: scale crops, $90^\circ / 180^\circ / 270^\circ$ rotations, and horizontal/vertical mirror flips ($\det(H) < 0$).
 4. **Visual Correspondence Overlay:** Draws colored correspondence lines between matched band/micrograph coordinates.
 
-#### Tier 3: Clinical Density & Genomics Grounding
+#### Tier 3: Inter-Paper Retraction Fingerprint Index — The Lean ImageTwin (`audit_figure_against_retraction_database`, `index_study_figure_set`)
+Catches cross-manuscript figure recycling across unrelated papers published years apart (e.g., paper-mill figure syndicates):
+1. **Dynamic DuckDB Store (`retracted_figures.duckdb`):**
+   - High-performance, append-only, idempotent index capable of continuous future expansion (seeding 5,000 retracted studies and scaling to 10k, 20k, 50k+).
+   - Ingests both full composite figures and segmented constituent sub-panels (Panel A, B, C, D).
+2. **3-Stage Cascaded Sieve:**
+   - **Stage 1 (Perceptual Hashes):** 64-bit Discrete Cosine Transform (`pHash`) and Difference Gradient Hash (`dHash`) with vectorized SIMD Bitwise Hamming filter (`bit_count(xor(h1, h2)) <= 16`) inside DuckDB.
+   - **Stage 2 (Dense Feature Vectors):** 256-dimensional normalized spatial pyramid gradient + frequency embedding cosine similarity ranking (`list_cosine_similarity >= 0.65`).
+   - **Stage 3 (Geometric Verification):** OpenCV SIFT keypoint extraction + Lowe's ratio test + RANSAC affine homography estimation $H$. Strictly requires $\ge 12$ non-degenerate inliers ($0.15 \le |\det(H)| \le 6.0$, $\ge 10$ unique spatial points) to eliminate false positives.
+3. **Forensic Comparative Visual Overlay:**
+   - Side-by-side comparative canvas showing query manuscript figure alongside the matched retracted donor paper figure.
+   - Coral Red banner detailing candidate PMCID, DOI, retraction reasons, and inlier count.
+   - Cyan correspondence lines connecting matched keypoint coordinates across manuscripts.
+
+#### Tier 4: Clinical Density, Manhattan Plot & Multi-Omics Grounding
 1. **Clinical Scatterplot Data Density vs. Claimed Therapeutic Envelope:**
    - Count how many actual data points populate the claimed clinical/therapeutic range (e.g. SBP > 160 mm Hg). If $< 10\%$ of points reside in the target zone, apply `LR = 0.20`.
    - Check for extreme outlier leverage ($< 5\%$ of sample driving the entire regression slope).
@@ -183,7 +197,7 @@ Detects within-manuscript figure tampering with zero external database requireme
    - Verify that the y-axis does not disguise raw $p$-values as FDR/adjusted $q$-values.
    - Verify whether claimed hub genes sit inside the noise corridor ($|\log_2 \text{FC}| < 0.585$) or exhibit artificial clipping lines.
 
-**Kill-Switch 3.5:** Halt and reject if confirmed Western blot/microscopy duplication, significance inversion, non-existent rsIDs, or fabricated GWAS loci are verified.
+**Kill-Switch 3.5:** Halt and reject if confirmed intra-paper/cross-paper figure duplication, Western blot lane cloning, significance inversion, non-existent rsIDs, or fabricated GWAS loci are verified.
 
 ---
 
