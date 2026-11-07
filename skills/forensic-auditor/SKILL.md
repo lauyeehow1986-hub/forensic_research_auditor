@@ -1,317 +1,94 @@
 ---
 name: forensic-research-auditor
-description: Audits scientific publications, preprints, clinical trials, DOIs, PMIDs, and PDFs across a 5-Gate Lexicographic Forensic Architecture (Gate 1 Provenance, Gate 2 Paper-Mill NLP, Gate 3 Universal Table & Continuous Math, Gate 3.5 Images & Figures, Gate 4 Governance & Registration) with STARD 2015 Two-Tier Bayesian scoring. Formulated from a 10,000-study quintuple-wave blind full-text benchmark (5,000 cases vs. 5,000 controls; 33,043 tables, 345,533 rows) with multi-cell consensus calibration, SPRITE, biomarker boundaries, correlation PSD, and statcheck recalculation. Use whenever the user asks to vet, audit, fact-check, critique, or evaluate a research paper, clinical trial, or study results.
+description: Audits scientific papers across a 7-Gate & 10-Domain Polyglot FastMCP & Cellular Sheaf Hypergraph Architecture (Rust petgraph, Z3 SMT, Julia Catlab, DuckDB PGQ, R, Python): (Gate 1-2) Provenance, Retraction Watch & Reagents, (Gate 3) GRIM/GRIMMER/DEBIT/SPRITE, Carlisle-Stouffer ANOVA, statcheck, 95% CI, 2nd-digit Benford, Cochran sparse tables (3.8), logit linearity (3.9), Excel-Trap covariance/PSD (3.10), continuous assay constant-CV (3.11) & blind GCD denominator N recovery (3.12), (Gate 3.5) Surya OCR + VLM charts, KM-IPD survival, TruFor/CAT-Net/DINOv2 splicing & Lean ImageTwin, (Gate 3.6) MedSAM/SAM 2/BiomedParse/TotalSegmentator anatomy masks, DICOM headers & cine-video forensics, (Gate 4-4.5) Spectrum/cutoff validity, Qualitative IRR kappa, Quote DAG & LLM stylometry, and (Gate 5) Multimodal Epistemic Hypergraph connecting Abstract, Assumptions, Methods, Findings, References/Recency, Author/COI Agendas & Conclusions.
 ---
-# Forensic Research Auditor (5-Gate Forensic Architecture & Multi-Modal Sieve)
+# Forensic Research Auditor (6-Gate SOTA v3: Merged 10,000-Study Blind Benchmark, Lean ImageTwin, Excel-Trap/Assay Closers, Graph DAG/GNN & Qualitative Forensics Edition)
 
-A comprehensive metascience and forensic peer-review engine designed for both Gemini (with NotebookLM integration) and Google Antigravity (`gemini-3.8-flash` with FastMCP orchestration and RStudio execution). It evaluates scientific studies across a **5-Gate Lexicographic Forensic Architecture** (fast-fail kill-switches) followed by **Tier 2 Bayesian Likelihood Ratio credibility scoring**, ensuring every table (Table 1 through Table N), continuous biomarker, 95% confidence interval (CI), diagnostic 2x2 contingency matrix, correlation matrix, bootstrap resampling protocol, cohort inclusion/exclusion flow, and every clinical/genomic figure (Western blots, scatterplots, forest plots, Manhattan plots, and volcano plots) is audited for mathematical consistency, external database grounding, and clinical relevancy.
+Synchronized with [`lauyeehow1986-hub/forensic_research_auditor`](https://github.com/lauyeehow1986-hub/forensic_research_auditor) (commits `4d8d353` and `cfae062`) and empirically grounded in the **10,000-Study Quintuple-Wave Blind Full-Text Benchmark + Wave 6 Multimodal Case-Control Suite** ([`lauyeehow1986-hub.github.io/forensic_research_auditor_validation/#blind-audit`](https://lauyeehow1986-hub.github.io/forensic_research_auditor_validation/#blind-audit)).
 
-## Empirical Grounding: The 10,000-Study Quintuple-Wave Blind Full-Text Benchmark
+## Empirical Grounding: The 10,000-Study Quintuple-Wave Blind Benchmark & SOTA v3 Gap Closers
 
-This skill is directly calibrated against the **10,000-Study Quintuple-Wave Blind Full-Text Empirical Benchmark** (5,000 retracted cases vs. 5,000 journal/year-matched clean controls from Europe PMC JATS XML; 33,043 tables and 345,533 table rows audited completely blind without incorporation bias; 0% mutual overlap across all 5 waves):
+- **Baseline Waves 1–5 (10,000 Studies; 33,043 Tables; 345,533 Rows):**
+  - **Tier-1 Definite Fraud Specificity:** **99.20%** (`8 / 1,000` clean controls flagged; Positive Likelihood Ratio $	ext{LR}^+ > 50.0$).
+  - **Clean Control Specificity:** **86.00%** in Wave 5 (`860 / 1,000` clean controls passed; `76.34%` pooled across 5,000 controls), upgraded in SOTA v3 with **Multi-Item Subscale ($k$-item) & Survey-Weight Guardrails** to suppress false alarms on legitimate survey cohorts.
+  - **Gate 3 Math Sensitivity:** `20.73%` pooled (`386 / 1,862`), reaching `80.81%` on strict-$N$ integer tables, upgraded in SOTA v3 with **Gates 3.8–3.12** specifically targeting the **4 Anatomies of Missed Retractions** (`Excel =AVERAGE()/=STDEV() Trap`, `Continuous Unbounded Assays`, `Header N Omission`, and `Narrative/Bar-Chart-Only Papers`).
 
-1. **Gate 3 (Numerical & Data Fraud Sensitivity):** **20.73%** pooled (386 / 1,862, 95% Wilson CI: **18.95% – 22.63%**).
-   - On discrete integer tables ($N < 100$), sensitivity reaches **50.00%** (catching half of all manual data fabrications).
-   - **The Excel Trap:** Fraudsters fabricating patient rows in spreadsheets using `=AVERAGE()` and `=STDEV()` generate mathematically self-consistent averages that pass basic discrete granularity checks.
-   - **The Continuous Biomarker Gap:** **92.6%** of real-world data fraud cases report continuous laboratory assays where standard integer GRIM cannot run, necessitating continuous boundary and SPRITE sieves.
-2. **Clean Control Specificity Breakthrough:** Wave 5 reached **86.00%** (860 / 1,000 controls passed clean, exceeding the 85% target; **76.34%** pooled across 5,000 controls, 95% Wilson CI: **75.14% – 77.50%**; TN=3,817, FP=1,183) by deploying **Multi-Cell Consensus Calibration** and decadic dynamic range span ($\ge 2.0$).
-3. **Tier-1 Definite Fraud Specificity:** **99.20%** (only 8 / 1,000 clean controls flagged; Positive Likelihood Ratio $LR^+ > 50.0$ on discrete tables).
-4. **Gate 4 (Governance & Editorial Specificity):** **82.38%** pooled (1,758 / 2,134 passed table math cleanly, matching clean controls; **96.35%** in Wave 5).
-   - In pure governance retractions (authorship disputes, forged peer review, fake ethics/IRB approvals), table math matches clean controls. Authentic arithmetic is preserved in non-data retractions.
-5. **Gate 3.5 (Images & Figure Splicing Specificity):** **82.34%** pooled (317 / 385 passed table math cleanly; **91.18%** in Wave 5).
-   - Western blot duplication or microscopy cloning does **not** imply table arithmetic fraud. Image fraud must be audited in Gate 3.5 and never combined into the Gate 3 math denominator.
-6. **Anti-Incorporation Bias Protocol:** The index test must **never** be used to categorize the reference standard. Study classification is strictly derived from independent metadata and Europe PMC editorial notices.
+## Core Workflow: The 6-Gate Lexicographic & 9-Domain FastMCP Architecture
 
----
+### Gate 1: Provenance & Retraction Hygiene (`thinkingLevel: "low"`)
+1. Check Crossref (`update-to`), Retraction Watch (`gitlab.com/crossref/retraction-watch-data`), Expressions of Concern, and PubPeer threads.
+2. **Anti-Circularity Rule:** Report registry status separately from blind empirical table/image/graph detections. **Kill-Switch 1:** Halt on verified retraction or unresolved EoC.
 
-## When to Use
+### Gate 2: Paper-Mill, Tortured Phrases & Reagent Forensics (`thinkingLevel: "medium"`)
+1. Screen against the Problematic Paper Screener (PPS) tortured phrases dictionary, ICLAC misidentified cell lines, and oligonucleotide BLAST homology (`Seek & Blastn` / `biomcp`). **Kill-Switch 2:** Halt if $\ge 1$ tortured phrase or invalidated reagent is found.
 
-- The user asks to audit, vet, fact-check, or evaluate a scientific paper, clinical trial, diagnostic prediction model, GWAS/transcriptomics study, preprint, DOI, PMID, arXiv ID, or uploaded study PDF.
-- The user wants to check if a paper's results are flawed, p-hacked, underpowered/imprecise (wide 95% CI), variance-compressed (too-narrow 95% CI), over-extrapolated, diagnostically distorted (High Specificity Mirage), un-shrunk, cohort-purged (spectrum truncation), or fabricated.
-- The user wants to run or generate a 5-Gate Forensic Audit packet for their Gemini Notebook (`Forensic Research Auditor`) or Google Antigravity workspace.
+### Gate 3: Universal Table, Continuous Assay & Covariance Math (`mcp_servers/forensic_math_mcp.py` & `scripts/audit_paper.R`)
+1. **Core Discrete & Continuous Sieves:** Run `GRIM`, `Analytic-GRIMMER` ($\sum x_i^2 \equiv \sum x_i \pmod 2$), `DEBIT`, `SPRITE` / Bhatia-Davis bounds (with multi-item scale $k$ and survey-weight guards), `Carlisle-Stouffer` RCT baseline ANOVA ($\Phi(Z_{	ext{pool}})$), `statcheck` 2D NHST recalculation, **95% CI symmetry/variance compression ($	ext{LR}=0.14$)/GRADE OIS imprecision ($	ext{LR}=0.40$)**, and scale-gated ($\ge 2.0$ orders) **2nd-Digit Benford + Synthetic Tabular DNR (`LR=0.10`)**.
+2. **Gate 3.7 — Diagnostic 2x2 Contingency & Bootstrap Shrinkage (`run_diagnostic_2x2_audit`, `run_bootstrap_resampling_audit`):** Verify Bayes PPV/NPV against true clinical prevalence and check whether claimed bootstrap shrinkage was applied to deployed $eta$ coefficients.
+3. **Gate 3.8 — Cochran Sparse Contingency Table Sieve (`audit_cochran_sparse_contingency_table`):** Flag $E_{ij} < 1.0$ or $> 20\%$ of cells $< 5.0$ tested with uncorrected Pearson $\chi^2$ instead of Fisher's exact test (`LR = 0.20`; `LR = 0.15` if Fisher $p \ge 0.05$).
+4. **Gate 3.9 — Logit Linearity & Continuous Ratio Skewness (`run_logit_linearity_and_ratio_audit`):** Flag heavy-tailed biological ratios modeled linearly without spline/Box-Tidwell checks (`LR = 0.30`).
+5. **Gate 3.10 — "Excel Trap" Pre-Post Covariance & PSD Sieve (`audit_excel_trap_pre_post_and_regression`):** Reconstruct implied pre-post correlation $r_{01} = rac{\sigma_0^2 + \sigma_1^2 - \sigma_\Delta^2}{2\sigma_0\sigma_1}$ (trigger **Kill-Switch 3.10** if $|r_{01}| > 1.03$), verify correlation matrix positive semi-definiteness ($\lambda_{\min}(R) \ge 0$), and check exact $F	ext{-to-}R^2$ regression identity.
+6. **Gate 3.11 — Continuous Wet-Lab Assay Fold-Change & Constant-CV Sieve (`audit_continuous_assay_fold_change_and_cv`):** Flag Western blot/qPCR control-group `1.00 ± 0.00` two-sample $t$-test $df$ inflation (`LR = 0.25`), constant-CV bar templates ($	ext{CV}_{	ext{of CV}} < 0.012$ across $\ge 4$ groups, `LR = 0.10`), and ELISA OD 450nm $> 4.0$ saturation (`LR = 0.10`).
+7. **Gate 3.12 — Blind Denominator ($N$) GCD Recovery (`recover_blind_column_denominator_n`):** Recover omitted column $N \in [5, 500]$ from categorical percentages (**Kill-Switch 3.12** if zero integer $N$ exists across $\ge 3$ percentages).
 
----
+### Gate 3.5: OCR/VLM Chart Digitizer, KM-IPD Survival, Multi-Omics & Lean ImageTwin (`mcp_servers/forensic_chart_mcp.py` & `src/vision/`)
+1. **Layout OCR & VLM Chart Transcription (`verify_vlm_bar_and_error_bar_pixels`, `transcribe_and_pipe_to_table_math`):** Extract bars/whiskers via MinerU/Surya OCR + Qwen2.5-VL / Gemini 3.8 Flash to catch `SE` whiskers plotted as `SD` (`LR = 0.15`), audit clinical scatterplot tail density (`LR = 0.20`), and pipe bar-chart/narrative values into Gate 3 math sieves.
+2. **Guyot KM-IPD Survival & Z-Curve (`reconstruct_km_ipd_guyot`, `audit_p_curve_and_z_curve`):** Reconstruct interval survival events/censoring from KM curves (**Kill-Switch** on non-monotonicity or impossible at-risk counts) and test P-curve/Z-curve skewness (`LR = 0.20`).
+3. **Manhattan & Volcano Plot MCP Grounding (`run_manhattan_volcano_audit`):** Flag single-SNP chimneys (`< 2` LD flanking SNPs), $\lambda_{	ext{GC}} > 1.15$, or ungrounded loci in EMBL-EBI GWAS Catalog / `open-targets-mcp` (`LR = 0.15`), and volcano plot raw-$p$-as-FDR masquerades (`LR = 0.20`).
+4. **Deep Learning Image Splicing & Phase 3 DuckDB SIMD Lean ImageTwin (`image_splicing_dl.py`, `src/vision/`):** Run Branch A (TruFor `Noiseprint++` high-pass residual variance + CAT-Net v2 JPEG ELA) and Branch B (dihedral $D_4$ rotation/flip-invariant DINOv2 + LightGlue clone matching + DuckDB SIMD inter-paper retraction fingerprint index). **Kill-Switch 3.5:** Halt on verified splicing, erasure, or intra-/inter-paper cloning.
 
-## Core Workflow: The 5-Gate Forensic Architecture
+### Gate 4: Governance, Spectrum Truncation, Cutoff Validity & Graph Engineering (`graph_engineering.py`)
+1. **Gate 4.1 — Spectrum Truncation & Etiological Purging (`run_spectrum_truncation_audit`):** Flag $> 30\%$ screening exclusions that purge primary clinical etiologies or misuse MCAR (`LR = 0.25`).
+2. **Gate 4.2 — Population-Phenotype Cutoff & Descriptive Alignment (`run_population_phenotype_cutoff_audit`, `run_descriptive_methods_table_audit`):** Flag mismatched ethnic phenotype cutoffs (`LR = 0.30`) and Methods-to-Table parametric vs. non-parametric contradictions (`LR = 0.25`).
+3. **Gate 4.3 — Internal Manuscript Consistency DAG (`audit_manuscript_consistency_dag`):** Verify exact participant and event conservation from CONSORT $	o$ Table 1 $	o$ Table N $	o$ Subgroups (`LR = 0.25`; **Kill-Switch** on CONSORT overflow).
+4. **Gate 4.4 — External Bibliometric & Editor-Collusion GNN (`audit_bibliometric_collusion_graph`):** Score handling-editor dominance ($\ge 35\% \implies 	ext{LR} = 0.20$), peer-review turnaround velocity ($< 10	ext{ days} \implies 	ext{LR} = 0.35$), citation cartel reciprocity ($\ge 40\% \implies 	ext{LR} = 0.30$), and co-author retraction contagion ($\ge 25\% \implies 	ext{LR} = 0.30$).
 
-Execute these 5 gates lexicographically. If a fatal kill-switch is triggered in any gate, immediately halt downstream synthesis and issue a **HARD REJECT (0% Credibility / Do Not Cite)** verdict.
+### Gate 4.5: Qualitative & Mixed-Methods Forensics (`qualitative_and_blind_gaps.py` & `qualitativeresearch` MCP)
+1. **Gate 4.5A — Qualitative Inter-Rater Reliability (IRR) Granularity (`verify_qualitative_irr_granularity`):** Test whether reported Cohen's $\kappa$, Pabak, and observed percent agreement $P_o$ can mathematically exist for $N$ double-coded transcripts (**Kill-Switch 4.5A** on impossible $(\kappa, P_o, N)$ combinations).
+2. **Gate 4.5B — Participant-Quote Pigeonhole & Attribute Contradiction DAG (`audit_qualitative_quote_participant_dag`):** Track every inline quote (`[P14, Male, 68y]`) via `@modelcontextprotocol/server-qualitativeresearch` (`github:tejpalvirk/qualitativeresearch`). Trigger **Kill-Switch 4.5B** if any participant ID exceeds recruited $N$ or changes sex/age/role across quotes; apply `LR = 0.20` if $> 80\%$ of quotes come from $\le 2$ participants ("Frankenstein" GenAI participant-spread bias).
+3. **Gate 4.5C — Synthetic LLM Interview Stylometry & COREQ/SRQR/Gupta Audit (`detect_synthetic_qualitative_quotes`):** Flag abnormally uniform utterance-length burstiness ($	ext{CV} < 0.12$) across interviewees or 4-gram voice bleed ($> 25\%$) from author prose (`LR = 0.15`), and grade COREQ (32-item), SRQR (21-item), and Gupta et al. (2026) 8-item AI qualitative audit trail compliance.
 
-```mermaid
-flowchart TD
-    A["Study Full Text / PDF / DOI"] --> G1["Gate 1: Provenance & Retraction Hygiene"]
-    G1 -- "Retracted / Unresolved EoC" --> KS1["Kill-Switch 1: HARD REJECT"]
-    G1 -- "Pass" --> G2["Gate 2: Paper-Mill & Reagent Forensics"]
-    G2 -- "Tortured Phrases / Invalid Reagents" --> KS2["Kill-Switch 2: HARD REJECT"]
-    G2 -- "Pass" --> G3["Gate 3: Universal Table & Continuous Math"]
-    G3 -- "GRIM / Boundary / SPRITE / Definiteness / Statcheck Failure" --> KS3["Kill-Switch 3: HARD REJECT"]
-    G3 -- "Pass" --> G35["Gate 3.5: Images, Figures & Multi-Omics Plots"]
-    G35 -- "Image Duplication / Chimney Peak / Fabricated Loci" --> KS35["Kill-Switch 3.5: HARD REJECT"]
-    G35 -- "Pass" --> G4["Gate 4: Governance, Ethics & Pre-Registration"]
-    G4 -- "Pass All Gates" --> T2["Tier 2: Bayesian Credibility Scoring & Deliverables"]
-```
+## Mandatory Deliverables (`audit_[STUDY_KEY].md`, `tweet_[STUDY_KEY].md`, `pubpeer_[STUDY_KEY].md`)
 
----
-
-### Step 1: Gate 1 - Provenance & Retraction Hygiene (`thinkingLevel: "low"`)
-
-1. Check publication retraction status (`is_retracted`), Expressions of Concern (EoC), and post-publication peer-review flags via OpenAlex, Crossref, PubMed, Zotero, or PubPeer.
-2. Verify registration lineage on Retraction Watch Database via Europe PMC text search or MCP tools.
-3. **Kill-Switch 1:** If the paper is retracted or has an unaddressed Expression of Concern, halt immediately and reject.
-
----
-
-### Step 2: Gate 2 - Paper-Mill, Tortured Phrases & Reagent Forensics (`thinkingLevel: "medium"`)
-
-1. Scan text and methods for Problematic Paper Screener (PPS) tortured phrases:
-   - `"counterfeit consciousness"` or `"fake brainpower"` (artificial intelligence)
-   - `"profound learning"` or `"profound comprehension"` (deep learning)
-   - `"irregular backwoods"` (random forest)
-   - `"credulous Bayes"` (naive Bayes)
-   - `"haze figuring"` or `"vapor processing"` (cloud computing)
-   - `"bosom peril"` (breast cancer)
-   - `"cruel"` used for statistical *mean*, or `"caesarean section"` used for *standard deviation*.
-2. For biomedical studies, check for verifiable Research Resource Identifiers (`RRID:`), known cross-contaminated cell lines (e.g. Chang liver, HEp-2), and PCR primer/shRNA target homology via NCBI BLAST (`Seek & Blastn` / `biomcp`).
-3. **Kill-Switch 2:** If $\ge 1$ confirmed tortured phrase or invalidated cell-line/primer reagent is found, halt immediately and reject.
-
----
-
-### Step 3: Gate 3 - Universal Table, Granularity & Continuous Mathematical Consistency (`thinkingLevel: "high"`)
-
-Do not restrict checks to Table 1. Audit **every summary, outcome, subgroup, and regression table** (Table 1 through Table N) using the full suite of discrete, continuous, regression, and multivariate mathematical sieves (detailed in [`references/gate3_advanced_forensic_sieves.md`](references/gate3_advanced_forensic_sieves.md)):
-
-1. **Universal Granularity Audit (`GRIM`, `GRIMMER`, `DEBIT`):**
-   - For integer/discrete counts or Likert items ($N < 100$), verify whether reported means match possible fraction denominators ($\text{GRIM}$) and whether reported SDs match valid integer variance spreads ($\text{GRIMMER}$).
-   - For binary proportion percentages, verify whether reported standard deviations match binomial variance $\sqrt{p(1-p)}$ ($\text{DEBIT}$).
-2. **Continuous Biomarker Boundary & Physiological Plausibility Sieve:**
-   - On strictly non-negative laboratory concentrations ($X \ge 0$, e.g. troponin, viral load, cytokines), verify:
-     $$\mu - 2\sigma \ge 0 \iff \frac{\mu}{\sigma} \ge 2.0$$
-     Flag `IMPOSSIBLE_NEGATIVE_BIOMARKER_RANGE` if $\mu - 2\sigma < 0$ without declared heavy-tailed or log-normal distributions.
-   - Flag `ZERO_SD_CONTINUOUS_VARIABLE` if $\sigma = 0.0$ on any continuous measurement where $\mu > 0$ and $N \ge 5$.
-   - **Extreme Physiological Variance Bounds:** Compare reported SD against established clinical physiological limits. Flag `EXTREME_VARIANCE_COMPRESSION` if $\sigma_{\text{reported}} < 0.20 \times \sigma_{\text{ref\_min}}$ ($LR = 0.15$), or `IMPOSSIBLE_PHYSIOLOGICAL_SPREAD` if $\sigma_{\text{reported}} > \sigma_{\text{ref\_max}}$.
-3. **SPRITE Bounded Discrete Distribution Reconstruction:**
-   - Test whether reported discrete means and SDs fit bounded survey item scales $[X_{\min}, X_{\max}]$.
-   - Enforce the theoretical maximum variance envelope:
-     $$\sigma_{\max}^2 = (X_{\max} - \mu)(\mu - X_{\min})$$
-     Flag `SPRITE_VARIANCE_EXCEEDS_BOUNDS` if $\sigma^2 > \sigma_{\max}^2$.
-   - Flag `UNNATURAL_ARM_HOMOSCEDASTICITY` if $0.995 \le \frac{\sigma_{\text{arm1}}}{\sigma_{\text{arm2}}} \le 1.005$ across independent trial arms with $N_{\text{total}} \ge 40$.
-4. **Multivariable Regression Triangle ($\beta$ - $\text{SE}$ - $p$ Wald Recalculation):**
-   - In logistic, Cox, or linear regression tables ($OR, HR, \beta$ with 95% CIs and reported $p$-values), reconstruct implied standard error:
-     $$\text{SE}_{\text{implied}} = \frac{\ln(UL) - \ln(LL)}{2 \times 1.95996} \quad (\text{or } \frac{UL - LL}{2 \times 1.95996} \text{ for linear models})$$
-   - Recompute the Wald test statistic:
-     $$Z_{\text{wald}} = \frac{\ln(\text{Estimate})}{\text{SE}_{\text{implied}}} \quad (\text{or } \frac{\text{Estimate}}{\text{SE}_{\text{implied}}})$$
-   - Recompute exact Wald $p$-value: $p_{\text{wald}} = 2 \times (1 - \Phi(|Z_{\text{wald}}|))$.
-   - Flag **Decision Error** if $p_{\text{reported}} < 0.05$ while $Z < 1.96$ / CI crosses null ($0$ for differences, $1.0$ for ratios).
-   - Flag `REGRESSION_P_DISCREPANCY` ($LR = 0.20$) if $|p_{\text{reported}} - p_{\text{wald}}| > 0.05$.
-5. **AI & Diagnostic Classifier Confusion Matrix Triangulation:**
-   - In machine learning and diagnostic biomarker papers reporting Accuracy, Sensitivity/Recall ($TPR$), and Specificity ($TNR$), enforce the universal identity:
-     $$ACC = TPR \cdot P + TNR \cdot (1 - P)$$
-   - Enforce envelope theorem: Accuracy must strictly lie within $[\min(TPR, TNR), \max(TPR, TNR)]$.
-   - If prevalence $P$ or cohort class breakdown ($N_{\text{positive}}, N_{\text{negative}}$) is known, compute expected accuracy. Flag `IMPOSSIBLE_AI_METRIC_TRIAD` if Accuracy falls outside the envelope or differs from expected by $> 3\%$.
-6. **Cross-Table Sample Size ($N$) & Marginal Conservation Sieve:**
-   - In categorical summary tables reporting counts and percentages $(n, \%)$:
-     $$\left| n - \text{round}\left( \frac{\% \cdot N}{100} \right) \right| \le 1$$
-     Flag `MARGINAL_PERCENTAGE_MISMATCH` if $|n - \text{implied}| > 1$.
-   - **Subgroup Parent Conservation:** Verify that subgroup sample sizes never exceed the parent cohort ($N_{\text{subgroup}} \le N_{\text{parent}}$). Flag `SUBGROUP_PARENT_OVERFLOW` if violated.
-   - Detect unexplained cohort expansion or attrition shifts across tables (e.g. Table 2 outcomes evaluated on more subjects than Table 1 baseline).
-7. **Correlation Matrix Positive Semi-Definiteness Sieve:**
-   - For correlation matrices ($r$) or regression tables ($\beta$), test whether $R \succeq 0$:
-     $$\lambda_{\min}(R) \ge 0 \quad \text{and} \quad \det(R_{3 \times 3}) = 1 - r_{12}^2 - r_{23}^2 - r_{13}^2 + 2 r_{12} r_{23} r_{13} \ge 0$$
-     Flag `NON_POSITIVE_DEFINITE_CORRELATION_MATRIX` if $\lambda_{\min} < -10^{-4}$.
-8. **Universal Tabular & Inline NHST Recalculation (`statcheck` & Tabular Cells):**
-   - Recalculate exact $p$-values for tabular and inline test statistics ($t$, $F$, $\chi^2$, $Z$).
-   - Flag any **Primary Decision Error** ($p_{\text{reported}} < 0.05$ vs $p_{\text{recalc}} \ge 0.05$).
-   - Compute the **P-Hacking Cliff Ratio** across all reported $p$-values:
-     $$R_{\text{cliff}} = \frac{N(p \in [0.041, 0.049])}{N(p \in [0.051, 0.059])}$$
-     Flag `P_HACKING_CLIFF_ANOMALY` ($LR = 0.25$) if $R_{\text{cliff}} \ge 3.0$ with $N \ge 6$.
-9. **95% Confidence Interval (CI) Symmetry & Imprecision:**
-   - **Symmetry:** Linear differences must satisfy $\text{Estimate} = (LL + UL)/2$; ratios must satisfy $\ln(\text{Estimate}) = (\ln(LL) + \ln(UL))/2$.
-   - **GRADE Imprecision:** If 95% CI spans both appreciable clinical benefit and harm, apply `LR = 0.40`.
-10. **Carlisle Baseline Table 1 & Macro-Epidemiological Grounding:**
-    - In RCTs, inspect baseline arm distribution for hyper-balance ($p > 0.9999$) or extreme imbalance ($p < 0.0001$).
-    - In epidemiological cohorts, cross-check baseline rates against `datacommons-mcp` regional statistics.
-11. **Multi-Magnitude Numerical Tables (Benford's Law with Decadic Range Gating):**
-    - Check second-digit conformity across unconstrained counts spanning $\ge 2.0$ orders of magnitude ($\log_{10}(\max/\min) \ge 2.0$). Do not apply to bounded vitals, chemistry yields, or physiological constants.
-12. **Kill-Switch 3 (Calibrated Multi-Cell Consensus Architecture):**
-    Dense scientific tables contain hundreds of numerical cells. An isolated single-cell rounding quirk ($|n - \text{implied}| = 1$), an isolated clerical author typo, or Gaussian reporting on skewed positive vitals represents poor reporting practice (SAMPL violation) rather than deliberate fabrication, and is routed to **Tier 2 Bayesian penalties** ($LR = 0.20$ to $0.40$).
-    A fatal **Kill-Switch 3 HARD REJECT (Tier 1)** is triggered exclusively when:
-    - **Multi-Cell Consensus Proof:** At least **two independent cells or rows** in the manuscript exhibit fatal structural impossibilities (e.g. $\ge 2$ GRIM/GRIMMER violations, or a GRIM violation paired with zero biological variance or impossible AI confusion triad).
-    - **Catastrophic Structural Failure:** A single violation that is mathematically irreconcilable with human typo error:
-      - Impossible AI metric triad strictly violating total probability ($ACC$ outside $[\min(TPR, TNR), \max(TPR, TNR)]$ envelope by $> 5\%$),
-      - Severe subgroup parent overflow ($N_{\text{subgroup}} > 1.20 \times N_{\text{parent}}$),
-      - Severe multivariable regression decision error ($p < 0.001$ while 95% CI spans the null $[0.50, 2.00]$),
-      - Correlation matrix with catastrophic non-positive semi-definiteness ($\lambda_{\min} < -0.20$), or
-      - Unadjusted Carlisle ANOVA variance compression $p < 10^{-6}$ across $\ge 5$ baseline continuous parameters.
-    - **Tier 2 Consensus Cluster:** $\ge 2$ distinct independent heuristic anomalies (Benford $\ge 2.0$ decades $p < 0.001$, Statcheck Decision Error, P-Hacking Cliff $R_{\text{cliff}} \ge 3.0$). Single isolated Tier 2 anomalies never trigger a reject; they prompt a peer-review raw data verification request.
-
----
-
-### Step 4: Gate 3.5 - Visual Forensics, Image Tampering & Multi-Omics Grounding (`thinkingLevel: "high"`)
-
-*Image manipulation and figure fabrication belong strictly to Gate 3.5 and must not be conflated with tabular arithmetic.*
-
-Operates across a **3-Tier Visual Forensic Architecture**:
-
-#### Tier 1: Dual-Mode Chart Digitizer & Statistical Sieve (`audit_chart_figure`)
-Addresses the 8.2% of data integrity retractions where numerical findings are presented in figure plots rather than in XML/HTML tables:
-1. **Chart Transcription:** Employs RapidOCR-ONNX + OpenCV contour detection (offline deterministic fallback) alongside Gemini Vision API to calibrate axes, detect bar heights (Means), extract whisker lengths (SD/SEM), and parse comparison brackets.
-2. **$P$-Value Bracket Recalculation:** Re-runs independent Welch's $t$-test (`scipy.stats.ttest_ind_from_stats`) using extracted group means, SDs, and sample sizes ($N$). Flags **Significance Inversions** (claiming $p < 0.001$ over non-significant $p > 0.40$ bars).
-3. **Zero-Bound Truncation Sieve:** Evaluates Gaussian lower-tail probability $P(X < 0) = \Phi(-Mean/SD)$ on strictly non-negative biological concentrations (e.g., troponin, cytokines). Flags when normal variance entails impossible negative values ($Mean - 2 \times SD < 0$) and the lower error bar is truncated flat at $Y = 0$.
-4. **FastMCP Table Math Bridge:** Converts extracted chart series into standardized `TableRow` objects and feeds them into the FastMCP GRIM / SPRITE / Popoviciu variance bounds engines.
-5. **Visual Discrepancy Overlay:** Generates publication-ready annotated images highlighting verified elements in Emerald Green and anomalies in Coral Red with callout explanation badges.
-
-#### Tier 2: Intra-Paper Splicing & Duplication Sieve (`audit_figure_splicing`)
-Detects within-manuscript figure tampering with zero external database requirements:
-1. **Multi-Panel Splitter:** Automatically segments complex figures (Panel A, B, C, D) using gutter, border, and sub-label contour analysis.
-2. **Western Blot Lane Splicing & Band Cloning:**
-   - Extracts band patches across adjacent and non-adjacent lanes.
-   - Evaluates Normalized Cross-Correlation (NCC) and gradient similarity; flags cloned bands across different loading or treatment lanes ($R > 0.95$).
-   - Analyzes vertical background step-discontinuities across lane boundaries to detect cut-and-paste lane splicing.
-3. **Microscopy & Histology Homography Sieve:**
-   - Detects reused cell culture or histology fields between panels using OpenCV SIFT/ORB keypoints and RANSAC affine homography estimation $H$.
-   - Flags geometric duplications: scale crops, $90^\circ / 180^\circ / 270^\circ$ rotations, and horizontal/vertical mirror flips ($\det(H) < 0$).
-4. **Visual Correspondence Overlay:** Draws colored correspondence lines between matched band/micrograph coordinates.
-
-#### Tier 3: Inter-Paper Retraction Fingerprint Index — The Lean ImageTwin (`audit_figure_against_retraction_database`, `index_study_figure_set`)
-Catches cross-manuscript figure recycling across unrelated papers published years apart (e.g., paper-mill figure syndicates):
-1. **Dynamic DuckDB Store (`retracted_figures.duckdb`):**
-   - High-performance, append-only, idempotent index capable of continuous future expansion (seeding 5,000 retracted studies and scaling to 10k, 20k, 50k+).
-   - Ingests both full composite figures and segmented constituent sub-panels (Panel A, B, C, D).
-2. **3-Stage Cascaded Sieve:**
-   - **Stage 1 (Perceptual Hashes):** 64-bit Discrete Cosine Transform (`pHash`) and Difference Gradient Hash (`dHash`) with vectorized SIMD Bitwise Hamming filter (`bit_count(xor(h1, h2)) <= 16`) inside DuckDB.
-   - **Stage 2 (Dense Feature Vectors):** 256-dimensional normalized spatial pyramid gradient + frequency embedding cosine similarity ranking (`list_cosine_similarity >= 0.65`).
-   - **Stage 3 (Geometric Verification):** OpenCV SIFT keypoint extraction + Lowe's ratio test + RANSAC affine homography estimation $H$. Strictly requires $\ge 12$ non-degenerate inliers ($0.15 \le |\det(H)| \le 6.0$, $\ge 10$ unique spatial points) to eliminate false positives.
-3. **Forensic Comparative Visual Overlay:**
-   - Side-by-side comparative canvas showing query manuscript figure alongside the matched retracted donor paper figure.
-   - Coral Red banner detailing candidate PMCID, DOI, retraction reasons, and inlier count.
-   - Cyan correspondence lines connecting matched keypoint coordinates across manuscripts.
-
-#### Tier 4: Clinical Density, Manhattan Plot & Multi-Omics Grounding
-1. **Clinical Scatterplot Data Density vs. Claimed Therapeutic Envelope:**
-   - Count how many actual data points populate the claimed clinical/therapeutic range (e.g. SBP > 160 mm Hg). If $< 10\%$ of points reside in the target zone, apply `LR = 0.20`.
-   - Check for extreme outlier leverage ($< 5\%$ of sample driving the entire regression slope).
-2. **Manhattan Plot Forensics & GWAS Catalog Grounding:**
-   - **Single-SNP Chimney Detection:** Authentic GWAS loci exhibit linkage disequilibrium (LD) towers ($\pm 500 \text{ kb}$). Flag solitary single-dot chimneys ($< 2$ supporting SNPs with $p < 10^{-4}$ in locus window) as genotyping artifacts or synthetic points.
-   - **Inflation & Thresholds:** Verify $\lambda_{\text{GC}} \in [0.95, 1.10]$ and threshold $5 \times 10^{-8}$.
-   - **External Grounding:** Query lead rsIDs against EMBL-EBI GWAS Catalog API and Open Targets MCP. Flag nonexistent dbSNP identifiers or contradictory risk alleles.
-3. **Volcano Plot Forensics & Transcriptomics Grounding:**
-   - Verify that the y-axis does not disguise raw $p$-values as FDR/adjusted $q$-values.
-   - Verify whether claimed hub genes sit inside the noise corridor ($|\log_2 \text{FC}| < 0.585$) or exhibit artificial clipping lines.
-
-**Kill-Switch 3.5:** Halt and reject if confirmed intra-paper/cross-paper figure duplication, Western blot lane cloning, significance inversion, non-existent rsIDs, or fabricated GWAS loci are verified.
-
----
-
-### Step 4b: Advanced Specialized Clinical Sieves (Gates 3.6 – 3.9)
-
-- **Gate 3.6: Diagnostic 2x2 Matrix & High Specificity Mirage:**
-  - Reconstruct full $2 \times 2$ table ($TP, FP, FN, TN$). Compute $FNR = 1 - \text{Sens}$ and $LR- = (1 - \text{Sens}) / \text{Spec}$.
-  - Flag the **High Specificity Mirage** if authors tout $> 90\%$ specificity while Sensitivity is $< 50\%$ ($LR- > 0.80$), missing the majority of diseased patients ($LR = 0.20$).
-- **Gate 3.7: Bootstrap Resampling & Shrinkage Sieve:**
-  - Flag under-resampling if iterations $B < 500$ or if authors conflate sample-split ratios with repetitions ($LR = 0.60$).
-  - Verify whether claimed shrinkage factors (e.g. $\approx 0.85$ or LASSO) were multiplied into deployed nomogram/beta weights. If raw ML betas are used, flag cosmetic shrinkage ($LR = 0.60$).
-- **Gate 3.8: Cochran Sparse Table & Expected Count Sieve:**
-  - Reconstruct expected frequencies $E_{ij} = (R_i \times C_j) / N$.
-  - Flag uncorrected Pearson's $\chi^2$ run on tables where $> 20\%$ of cells have $E_{ij} < 5$ or any $E_{ij} < 1$, violating Cochran's rule ($LR = 0.20$).
-- **Gate 3.9: Logit Linearity & Continuous Ratio Skewness Sieve:**
-  - Audit continuous hemodynamic ratios ($E/e'$, NT-proBNP) entered linearly into logistic/Cox models without spline (RCS) testing or log-transformation ($LR = 0.35$).
-
----
-
-### Step 5: Gate 4 - Governance, Editorial Integrity, Pre-Registration & Reporting Drift (`thinkingLevel: "high"`)
-
-*Pure governance retractions preserve ~78–79% valid table arithmetic matching controls ($p = 0.31$). Evaluate governance defects on their own merits without circular math penalties.*
-
-1. **Pre-Registration & Outcome Switching:** Compare published primary/secondary endpoints against clinical trial registries (`NCT`, `ISRCTN`, `PROSPERO`). Flag undeclared primary outcome switching ($LR = 0.05$).
-2. **Abstract-to-Text Reporting Drift:** Detect primary outcome demotion, selective subgroup promotion, or relative risk spin ($LR = 0.40$).
-3. **Spectrum Truncation & Etiological Purging (Gate 4.1):** Flag studies excluding $> 50\%$ of screened patients or purging real-world target etiologies (e.g. excluding ischemic cardiomyopathy from a heart failure cohort) to artificially inflate AUC ($LR = 0.35$).
-4. **Population-Phenotype Cutoff & Construct Validity (Gate 4.2):** Flag paradoxical Western diagnostic cutoffs imported onto Asian cohorts (e.g. BMI $> 30$ instead of Asian MOH $\text{BMI} \ge 27.5$), deflating detection sensitivity ($LR = 0.25$).
-5. **Methods-to-Table Descriptive Sieve (Gate 4.3):** Detect boilerplate text claiming parametric tests on heavily skewed biomarkers when tables present Medians/IQRs ($LR = 0.40$).
-6. **Methodological Risk of Bias:** Grade all domains of Cochrane RoB 2 (RCTs), ROBINS-I (observational), or PROBAST (prediction models) citing verbatim quotes.
-7. **Kill-Switch 4:** Halt and reject if documented peer-review ring fabrication, forged institutional ethics/IRB approvals, or faked author affiliations are verified.
-
----
-
-## Tier 2: Bayesian Credibility Calculation
-
-If all 5 gates pass without triggering a fatal kill-switch, calculate the final posterior credibility:
-
-1. **Select Baseline Field Prior Probability ($P_{\text{prior}}$):**
-   - Confirmatory randomized controlled trial (RCT): `0.50`
-   - Exploratory clinical, biomedical, or psychological study: `0.30`
-   - Observational epidemiology, EHR, or discovery multi-omics: `0.20`
-2. **Compute Prior Odds:**
-   $$\text{Prior Odds} = \frac{P_{\text{prior}}}{1 - P_{\text{prior}}}$$
-3. **Multiply by Applicable Likelihood Ratios ($\prod LR_i$):**
-
-| Empirical Sieve / Finding | Likelihood Ratio ($LR$) | Direction |
-| :--- | :---: | :---: |
-| Pre-registered with exact primary endpoint match | `2.50` | Credibility Boost |
-| Open raw data and reproducible code verified | `2.00` | Credibility Boost |
-| Independent replication in GWAS Catalog / Open Targets | `4.00` | Credibility Boost |
-| Multivariable regression triangle Wald $p$-discrepancy | `0.20` | Severe Penalty |
-| Impossible AI classifier metric triad ($ACC$ mismatch) | `0.15` | Severe Penalty |
-| Cross-table subgroup parent overflow or marginal discrepancy | `0.25` | Moderate Penalty |
-| Extreme physiological variance compression ($\sigma < 20\%$ reference SD) | `0.15` | Severe Penalty |
-| P-Hacking Cliff Anomaly ($R_{\text{cliff}} \ge 3.0$ around $0.05$) | `0.25` | Moderate Penalty |
-| Isolated rounding typo or non-decision CI asymmetry | `0.20` | Moderate Penalty |
-| Underpowered sample ($< 50\%$ power for target effect) | `0.35` | Moderate Penalty |
-| Severe 95% CI Imprecision (GRADE OIS violation / crossing MCID) | `0.40` | Moderate Penalty |
-| Suspiciously narrow 95% CI ($\sigma_{\text{implied}} < 25\%$ of reference SD) | `0.15` | Severe Penalty |
-| High Specificity Mirage ($FNR > 50\%$ or $LR- > 0.80$) | `0.20` | Severe Penalty |
-| Inappropriate uncorrected Pearson $\chi^2$ on Cochran sparse cells | `0.20` | Moderate Penalty |
-| Paradoxical population cutoff discordance (e.g. Western BMI on Asian cohort) | `0.25` | Moderate Penalty |
-| Severe Spectrum Truncation ($> 50\%$ excluded / primary etiology purged) | `0.35` | Moderate Penalty |
-| Unverified logit linearity / outlier leverage on continuous ratios | `0.35` | Moderate Penalty |
-| Methods-to-table descriptive mismatch + parametric testing on skewed variables | `0.40` | Moderate Penalty |
-| Unapplied Shrinkage / Inadequate Resampling ($B < 500$) | `0.60` | Mild Penalty |
-| Abstract-to-Text Reporting Drift / Primary Outcome Demotion Spin | `0.40` | Moderate Penalty |
-| Unreconciled sample size shifts across tables ($N$ attrition/expansion) | `0.30` | Moderate Penalty |
-| Scatterplot over-extrapolation / sparse tail density ($< 10\%$ in claimed range) | `0.20` | Severe Penalty |
-| Volcano plot unadjusted-$p$-as-FDR masquerade or noise-zone hub gene | `0.20` | Severe Penalty |
-| Manhattan plot isolated chimney peak or $\lambda_{\text{GC}} > 1.15$ | `0.15` | Severe Penalty |
-| Baseline Table 1 clinical imbalance or `datacommons-mcp` mismatch | `0.25` | Moderate Penalty |
-| Cochrane RoB 2 "Some Concerns" (2+ domains) | `0.50` | Mild Penalty |
-| Cochrane RoB 2 "High Risk" (any domain) | `0.15` | Severe Penalty |
-| Undeclared primary outcome switching | `0.05` | Fatal Penalty |
-
-4. **Compute Final Posterior Probability:**
-   $$\text{Posterior Odds} = \text{Prior Odds} \times \prod LR_i, \quad P_{\text{posterior}} = \frac{\text{Posterior Odds}}{1 + \text{Posterior Odds}}$$
-
----
-
-## Required Output Structure & Mandatory Deliverables (.md)
-
-Every audit must automatically create and write **three persistent files** to `./audit_reports/` (creating `./audit_reports/` if not present), alongside presenting the final consensus in chat with clickable file links:
-
-1. **`./audit_reports/audit_[STUDY_KEY].md`**: The complete 5-section consensus audit report.
-2. **`./audit_reports/tweet_[STUDY_KEY].md`**: A ready-to-publish 4-tweet Twitter/X disclosure thread containing the hook, deterministic mathematical receipts, sleuth community routing (`@PubPeer`, `@MicrobiomDigest`, `@gcabanac`, `@NickWise82`, `@SholtoDavid`), and hashtags (`#ScientificIntegrity`, `#Metascience`).
-3. **`./audit_reports/pubpeer_[STUDY_KEY].md`**: A strictly objective comment formatted for 1-click submission to PubPeer adhering to PubPeer moderation guidelines (zero accusatory language, focusing purely on numerical receipts).
-
-Format the deliverable using these 5 standard sections:
-
-1. **Executive Integrity Verdict:** (`PASS`, `QUALIFIED PASS`, `SKEPTICAL CAUTION`, or `HARD REJECT - KILL-SWITCH TRIPPED`).
-2. **Gate 1 & Gate 2 Provenance & Paper-Mill Summary:** Retraction status, registry ID, and tortured-phrase/reagent screen.
-3. **Gate 3 & Gate 3.5 Universal Table, Math & Figure Audit:**
-   - Discrete granularity (`GRIM`, `GRIMMER`, `DEBIT`).
-   - Continuous biomarker non-negative boundaries ($\mu - 2\sigma < 0$) and physiological variance bounds.
-   - SPRITE bounded integer scale variance envelope ($\sigma^2 > (X_{\max}-\mu)(\mu-X_{\min})$).
-   - Multivariable regression triangle ($\beta$ - $\text{SE}$ - $p$ Wald recalculation, CI crossing null).
-   - AI & diagnostic classifier confusion matrix triangulation ($ACC = TPR \cdot P + TNR \cdot (1 - P)$).
-   - Cross-table sample size ($N$) continuity, marginal $(n, \%)$ parity, and subgroup overflow.
-   - Correlation matrix positive semi-definiteness ($\lambda_{\min} \ge 0$).
-   - Inline and tabular NHST recalculations (`statcheck` Decision Errors, $P_{\text{cliff}}$).
-   - 95% CI symmetry, implied SE, and variance compression.
-   - Figures, Western blots, scatterplot density, and Manhattan/volcano plot grounding.
-4. **Gate 4 Governance, Reporting Drift & Methodological Bias Scorecard:**
-   - Registry alignment, outcome switching, and Cochrane RoB 2 / ROBINS-I / PROBAST grading.
-   - Spectrum truncation (Gate 4.1), phenotype cutoff validity (Gate 4.2), and descriptive consistency (Gate 4.3).
-5. **Tier 2 Bayesian Credibility Calculation:** Step-by-step table showing Prior Probability, each applied $LR_i$, final Posterior Credibility Percentage, and GRADE certainty rating.
-
----
+When auditing a publication for public or post-publication review, generate:
+1. `audit_[STUDY_KEY].md`: Complete 6-Gate Forensic Report & Case-Control Calibrated Empirical Bayes Scorecard.
+2. `tweet_[STUDY_KEY].md`: Neutral, evidence-grounded metascience thread citing only deterministic mathematical/visual invariants.
+3. `pubpeer_[STUDY_KEY].md`: Objective, COPE/PubPeer-compliant comment formatted with exact table coordinates, equations, and R/FastMCP reproduction code.
 
 ## Supplementary Resources in This Skill
 
-- [`references/gate3_advanced_forensic_sieves.md`](references/gate3_advanced_forensic_sieves.md): Technical specification and Python/FastMCP implementations for Continuous Biomarker Boundaries, SPRITE, Correlation PSD, Tabular NHST, and Cross-Table $N$ conservation.
-- [`references/audit_paper_r.md`](references/audit_paper_r.md): Complete R forensic execution scripts (`statcheck`, `scrutiny::grim_map`, `rsprite2`, `benford.analysis`, Carlisle baseline check, and clinical density functions).
-- [`references/antigravity_kit.md`](references/antigravity_kit.md): Drop-in `AGENTS.md` Master Prompt for `gemini-3.8-flash` and `.agents/mcp_config.json` configuration.
-- [`references/example_42802996_audit.md`](references/example_42802996_audit.md): Reference audit packet demonstrating 5-Gate evaluation.
+- `references/gate3_advanced_forensic_sieves.md`: Detailed mathematical formulations for Gates 3.8–3.12 and Gate 4.5 Qualitative Forensics.
+- `references/audit_paper_r.md`: Complete 20-function R forensic script (`scripts/audit_paper.R`).
+- `references/antigravity_kit.md`: `.agents/mcp_config.json` (wiring `forensic-math-mcp`, `forensic-chart-mcp`, `qualitativeresearch`, `quantitativeresearch`, `datacommons-mcp`, `mcp-analytics`, `open-targets-mcp`, `biomcp`, `rstudio`) and `AGENTS.md`.
+- `references/example_42802996_audit.md`: Reference Forensic Audit Packet.
+
+
+### Gate 3.6: Anatomical Segmentation (`MedSAM` / `SAM 2` / `BiomedParse` / `TotalSegmentator`), DICOM & Cine-Video Forensics (`medsam_dicom_video_forensics.py`)
+1. **Mask-to-Table Biometric Conservation (`audit_medsam_mask_to_table_biometrics`):** Segment lesions, organs, lumens, and histological structures via [MedSAM](https://github.com/bowang-lab/medsam), [MedSAM 2](https://huggingface.co/wanglab/MedSAM2/discussions/1/files) ([SAM 2](https://github.com/facebookresearch/sam2)), [BiomedParse](https://github.com/microsoft/BiomedParse), [TotalSegmentator](https://github.com/wasserth/totalsegmentator), and [MONAI](https://github.com/project-monai/monai). Convert pixel masks using scale bars or DICOM `PixelSpacing (0028,0030)` into physical area ($	ext{mm}^2$), RECIST diameter ($	ext{mm}$), or Simpson's volume ($	ext{mL}$) and cross-check against Table 1/2 (`|Z| > 3.5` triggers `LR = 0.15`; **Kill-Switch** on uncalibrated crop-zoom scale-bar manipulation).
+2. **3D Organ Topology & DICOM Provenance (`audit_anatomical_topology_and_dicom_provenance`):** Build the organ centroid adjacency graph (`Liver` vs. `Spleen`/`Heart_Apex`) to catch horizontally flipped radiology scans (artificial situs inversus), verify that DICOM `StudyDate` does not precede IRB/NCT registration, check `SliceThickness` against Methods text, and flag duplicate `SeriesInstanceUID` tags across supposedly distinct patients (**Kill-Switch**).
+3. **SAM 2 Cine-Video Forensics (`audit_cine_video_sam2_temporal_integrity`):** Track anatomical structures across echocardiography, angiography, and microscopy video frames to catch freeze-frame loops (`duplicate_frame_ratio > 0.25`), temporal splice jump cuts ($Z_{	ext{step}} > 8.0$), and playback speed acceleration ($2	imes$ frame-rate manipulation).
+
+### Gate 5: Unified Multimodal Epistemic Hypergraph (UMEH) & Cellular Sheaf Laplacian (`multimodal_epistemic_hypergraph.py` & `polyglot/`)
+1. **Cellular Sheaf Cohomology & Frustration Energy (`compute_cellular_sheaf_laplacian_energy`):** Model all 14 paper & context domains (`Abstract`, `Assumptions`, `Methods`, `Tables`, `Charts`, `Blots/Pictures`, `MedSAM/DICOM Anatomy`, `Cine-Videos`, `Qualitative Quotes`, `References/Recency`, `Author Personal History`, `Retraction/PubPeer History`, `COI/Sponsor/Agencies`, `Conclusion/Relevancy`) as stalks on a Cellular Sheaf $\mathcal{F}$ with restriction maps $\mathcal{F}_{u 	rianglelefteq e}$. Compute global Dirichlet frustration energy $\mathcal{E}_{	ext{Sheaf}}(\mathbf{x}) = \mathbf{x}^T \Delta_{\mathcal{F}} \mathbf{x} = \sum_{e=(u,v)} w_e \|\mathcal{F}_{u 	rianglelefteq e}\mathbf{x}_u - \mathcal{F}_{v 	rianglelefteq e}\mathbf{x}_v\|_2^2$ (**Kill-Switch** if $\mathcal{E}_{	ext{Sheaf}} > 2.50$ or $\ge 3$ cross-modal edges are frustrated).
+2. **Narrative Spin, Assumption Falsification, Reference Amnesia & COI/Agenda Coupling (`audit_narrative_to_evidence_spin_and_coi_hypergraph`):**
+   - **Abstract/Conclusion Spin:** Flag positive headline claims when the primary table endpoint is null ($p \ge 0.05$, `LR = 0.20`) or when a secondary subgroup is swapped into the conclusion.
+   - **Formal Assumption Falsification (`polyglot/smt_z3/`):** Encode statistical/causal assumptions in [Z3 Theorem Prover](https://github.com/z3prover/z3) and penalize when empirical plots/tables violate them (`LR = 0.30` per violated assumption).
+   - **Reference Recency ("Selective Amnesia") & Citation Polarity:** Flag 2026 papers with median reference age $> 9	ext{ years}$ and zero recent references or $\ge 2$ omitted recent contradicting RCTs (`LR = 0.25`), contrasting citations misrepresented as supporting (`LR = 0.25`), or zombie retracted citations.
+   - **Author Personal History & COI/Agency Agenda Coupling:** Flag hyper-prolific velocity ($\ge 35$ papers/yr) or multi-specialty topic-jumping ($\ge 15$ papers across $\ge 4$ fields/yr, `LR = 0.20`), and trigger `LR = 0.05` (or **Kill-Switch** when paired with zombie retractions) when undeclared COI / sponsor agendas align with narrative spin over a null primary table.
+3. **Polyglot High-Performance Execution (`polyglot/`):**
+   - **Rust (`polyglot/rust_hypergraph/`):** `petgraph` + `rayon` parallel SIMD Sheaf Laplacian solver.
+   - **C++ / SMT-LIB 2.6 (`polyglot/smt_z3/`):** [Z3 Theorem Prover](https://github.com/z3prover/z3) formal satisfiability checker.
+   - **Julia (`polyglot/julia_sheaf/`):** [Catlab.jl](https://github.com/AlgebraicJulia/catlab.jl) algebraic sheaf cohomology module.
+   - **DuckDB SQL/PGQ (`polyglot/duckdb_pgq/`):** In-process property graph + SIMD vector index.
+
+
+### Gate 6: Deterministic Agent Lifecycle Hooks (`.agents/hooks.json`) & Adaptive Swarm / `/boost` Router (`swarm_and_boost_router.py`)
+1. **Three OS-Level Agent Hooks (`hooks/` & `.agents/hooks.json`):**
+   - **`PreToolUse` Hook (`verify_pre_tool_use_hook`):** Intercepts `Write`/`Edit` calls before execution (`exit code 2` hard block). Physically blocks anti-circularity ground-truth leakage or secret exposure in public reports, and blocks writing `audit_[STUDY_KEY].md` or `pubpeer_[STUDY_KEY].md` before deterministic FastMCP tools have executed.
+   - **`PostToolUse` Hook (`evaluate_post_tool_sheaf_ratchet`):** Appends each tool's output stalk vector to the session Sheaf ledger and immediately injects a `KILL_SWITCH_HALT` directive when a Tier-1 fatal impossibility fires, short-circuiting downstream VLM/Swarm passes.
+   - **`Stop` Hook (`verify_stop_completion_gate`):** Blocks agent completion (`exit code 2`) unless `audit_[STUDY_KEY].md`, `tweet_[STUDY_KEY].md`, and `pubpeer_[STUDY_KEY].md` all exist, Gate 5 Sheaf energy is logged, and any misconduct claim in `pubpeer_[STUDY_KEY].md` is backed by $\ge 1$ Tier-1 Definite Impossibility ($99.20\%$ specificity, $\text{LR}^+ > 50$).
+2. **Adaptive 4-Mode Execution Router (`route_execution_mode_swarm_vs_boost`):**
+   - **`NO_SWARM_NO_BOOST`:** Default for early Tier-1 Kill-Switches (short-circuited by `PostToolUse`), low-complexity clean papers ($C < 3.5, \mathcal{E}_{\text{Sheaf}} < 0.25$), and routine local 8GB VRAM scans.
+   - **`TARGETED_BOOST_ONLY` (Prosecutor $\to$ Defense Counsel $\to$ Z3 Judge):** Triggered sequentially when Sheaf frustration energy is elevated ($\mathcal{E}_{\text{Sheaf}} \ge 0.25$), posterior credibility falls in the $15\%–65\%$ grey zone, or before emitting a public `pubpeer_[STUDY_KEY].md` post (safe on 8GB VRAM because only one role runs at a time).
+   - **`PARALLEL_5_AGENT_SWARM` (Cloud Antigravity Only):** Spawns 5 concurrent extraction sub-agents (`Tabular/Assay Math`, `Visual/MedSAM/Video`, `Qualitative/Narrative`, `Provenance/References/COI`, `Sheaf Aggregator`) when multimodal complexity $C \ge 3.5$ on Cloud `gemini-3.8-flash` (disabled on local 8GB VRAM to prevent KV-cache thrashing).
+   - **`PARALLEL_5_AGENT_SWARM_PLUS_BOOST`:** Combines parallel 5-agent cloud extraction with adversarial `/boost` verification on high-complexity, high-frustration studies.
